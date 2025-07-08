@@ -1,0 +1,66 @@
+<mat-card class="trinta-card norm-list-card  mb-25 bg-white border-none d-block">
+    <mat-card-header>
+        <mat-card-title>
+            <h5 class="mt-0 mb-0">
+                Users List
+            </h5>
+        </mat-card-title>
+        <mat-card-subtitle>
+
+        </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="norm-list-table">
+            <div class="table-responsive">
+                <mat-table [dataSource]="dataSource" matSort>
+                    <ng-container matColumnDef="id">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> ID</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.id }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="code">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Code</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.code }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="organization">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> organization</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.organization }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="title">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> title</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.title }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="version_year">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> version_year</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.version_year }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="category">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> category</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.category }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="status">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Estado</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.status ? 'Activo' : 'Inactivo' }}</mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>
+            </div>
+            <mat-paginator
+                (page)="handlePageEvent($event)"
+                [length]="resultsLength"
+                [pageIndex]="pageIndex"
+                [pageSize]="pageSize"
+                [pageSizeOptions]="pageSizeOptions"
+                [showFirstLastButtons]="showFirstLastButtons"
+                aria-label="Select page">
+            </mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>

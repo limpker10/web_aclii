@@ -1,0 +1,61 @@
+<mat-card class="trinta-card users-list-card mb-25 bg-white border-none d-block">
+    <mat-card-header>
+        <mat-card-title>
+            <h5 class="mt-0 mb-0">
+                Users List
+            </h5>
+        </mat-card-title>
+        <mat-card-subtitle>
+
+        </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="users-list-table">
+            <div class="table-responsive">
+                <mat-table [dataSource]="dataSource" matSort>
+                    <ng-container matColumnDef="id">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> ID</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.id }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nombre">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Nombre</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.nombre }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="apellidos">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Apellidos</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.apellidos }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="email">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Email</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.email }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dni">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> DNI</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.dni }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="estado">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Estado</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.estado ? 'Activo' : 'Inactivo' }}</mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>
+            </div>
+            <mat-paginator
+                (page)="handlePageEvent($event)"
+                [length]="resultsLength"
+                [pageIndex]="pageIndex"
+                [pageSize]="pageSize"
+                [pageSizeOptions]="pageSizeOptions"
+                [showFirstLastButtons]="showFirstLastButtons"
+                aria-label="Select page">
+            </mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>
