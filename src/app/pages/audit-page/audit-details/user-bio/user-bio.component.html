@@ -1,0 +1,39 @@
+<mat-card class="trinta-card user-bio-card mb-25 bg-white border-none d-block">
+    <mat-card-content>
+        <h5>Resumen de Auditoría</h5>
+        <span class="d-block text-body">
+            Esta tarjeta contiene información clave de la auditoría seleccionada.
+        </span>
+
+        <ul class="p-0 mb-3 list-unstyled contact-info">
+            <li class="position-relative text-black">
+                <i-feather name="tag"></i-feather>
+                <strong>Código:</strong> {{ code }}
+            </li>
+            <li class="position-relative text-black">
+                <i-feather name="check-circle"></i-feather>
+                <strong>Estado:</strong> {{ status }}
+            </li>
+            <li class="position-relative text-black">
+                <i-feather name="user"></i-feather>
+                <strong>Auditor:</strong> {{ auditor.nombre || 'No asignado' }}
+            </li>
+            <li class="position-relative text-black">
+                <i-feather name="user-check"></i-feather>
+                <strong>Coordinador:</strong> {{ coordinator.nombre || 'No asignado' }}
+            </li>
+            <li class="position-relative text-black">
+                <i-feather name="briefcase"></i-feather>
+                <strong>Entidad:</strong> {{ entityType | titlecase }} #{{ entityId }}
+            </li>
+            <li class="position-relative text-black">
+                <i-feather name="calendar"></i-feather>
+                <strong>Fecha:</strong> {{ date | date:'longDate' }}
+            </li>
+            <li class="position-relative text-black">
+                <i-feather name="file-text"></i-feather>
+                <strong>Norma:</strong> {{ standardCode }} - {{ standardTitle }}
+            </li>
+        </ul>
+    </mat-card-content>
+</mat-card>

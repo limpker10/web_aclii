@@ -1,29 +1,54 @@
 <mat-card class="trinta-card add-user-card mb-25 bg-white border-none d-block">
     <mat-card-header>
         <mat-card-title>
-            <h5 class="mt-0 mb-0">
-                Add User
-            </h5>
+            <h5 class="mt-0 mb-0">Agregar Usuario</h5>
         </mat-card-title>
     </mat-card-header>
+
     <mat-card-content>
         <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-4">
             <div class="row">
-
+                <!-- Nombre -->
                 <div class="col-lg-6">
-                    <mat-form-field class="w-full" appearance="outline">
-                        <mat-label>Email</mat-label>
-                        <input matInput formControlName="email" type="email" required/>
-                        <mat-error *ngIf="registerForm.get('email')?.invalid">Email inválido</mat-error>
+                    <label class="label d-block fw-medium mb-10">Nombre</label>
+                    <mat-form-field class="w-full">
+                        <i-feather name="user"></i-feather>
+                        <mat-label>Nombre</mat-label>
+                        <input matInput formControlName="nombre" required />
                     </mat-form-field>
                 </div>
 
+                <!-- Apellidos -->
                 <div class="col-lg-6">
-                    <mat-form-field class="w-full" appearance="outline">
+                    <label class="label d-block fw-medium mb-10">Apellidos</label>
+                    <mat-form-field class="w-full">
+                        <i-feather name="user"></i-feather>
+                        <mat-label>Apellidos</mat-label>
+                        <input matInput formControlName="apellidos" required />
+                    </mat-form-field>
+                </div>
+
+                <!-- Email -->
+                <div class="col-lg-6">
+                    <label class="label d-block fw-medium mb-10">Correo Electrónico</label>
+                    <mat-form-field class="w-full">
+                        <i-feather name="mail"></i-feather>
+                        <mat-label>Correo Electrónico</mat-label>
+                        <input matInput formControlName="email" type="email" required />
+                        @if (registerForm.get('email')?.invalid) {
+                            <mat-error>Email inválido</mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+
+                <!-- Contraseña -->
+                <div class="col-lg-6">
+                    <label class="label d-block fw-medium mb-10">Contraseña</label>
+                    <mat-form-field class="w-full">
+                        <i-feather name="lock"></i-feather>
                         <mat-label>Contraseña</mat-label>
-                        <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" required/>
-                        <button mat-icon-button matSuffix (click)="hide = !hide"
-                                [attr.aria-label]="'Mostrar contraseña'">
+                        <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" required />
+                        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Mostrar contraseña'">
                             <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
                         </button>
                         @if (registerForm.get('password')?.invalid) {
@@ -32,99 +57,105 @@
                     </mat-form-field>
                 </div>
 
+                <!-- DNI -->
                 <div class="col-lg-6">
-                    <mat-form-field class="w-full" appearance="outline">
-                        <mat-label>Nombre</mat-label>
-                        <input matInput formControlName="nombre" required/>
-                    </mat-form-field>
-                </div>
-
-                <div class="col-lg-6">
-                    <mat-form-field class="w-full" appearance="outline">
-                        <mat-label>Apellidos</mat-label>
-                        <input matInput formControlName="apellidos" required/>
-                    </mat-form-field>
-                </div>
-
-                <div class="col-lg-6">
-                    <mat-form-field class="w-full" appearance="outline">
+                    <label class="label d-block fw-medium mb-10">DNI</label>
+                    <mat-form-field class="w-full">
+                        <i-feather name="id-card"></i-feather>
                         <mat-label>DNI</mat-label>
-                        <input matInput formControlName="dni" maxlength="8"/>
+                        <input matInput formControlName="dni" maxlength="8" />
                     </mat-form-field>
                 </div>
 
+                <!-- Teléfono -->
                 <div class="col-lg-6">
-                    <mat-form-field class="w-full" appearance="outline">
+                    <label class="label d-block fw-medium mb-10">Teléfono</label>
+                    <mat-form-field class="w-full">
+                        <i-feather name="phone"></i-feather>
                         <mat-label>Teléfono</mat-label>
-                        <input matInput formControlName="telefono"/>
+                        <input matInput formControlName="telefono" />
                     </mat-form-field>
                 </div>
 
+                <!-- Dirección -->
                 <div class="col-lg-6">
-                    <mat-form-field class="w-full" appearance="outline">
+                    <label class="label d-block fw-medium mb-10">Dirección</label>
+                    <mat-form-field class="w-full">
+                        <i-feather name="map-pin"></i-feather>
                         <mat-label>Dirección</mat-label>
-                        <input matInput formControlName="direccion"/>
+                        <input matInput formControlName="direccion" />
                     </mat-form-field>
                 </div>
 
+                <!-- Resumen -->
                 <div class="col-lg-6">
-                    <mat-form-field class="w-full" appearance="outline">
+                    <label class="label d-block fw-medium mb-10">Resumen</label>
+                    <mat-form-field class="w-full">
+                        <i-feather name="file-text"></i-feather>
                         <mat-label>Resumen</mat-label>
                         <textarea matInput formControlName="resumen"></textarea>
                     </mat-form-field>
                 </div>
 
+                <!-- Fecha de elección -->
                 <div class="col-lg-6">
-                    <mat-form-field class="w-full" appearance="outline">
+                    <label class="label d-block fw-medium mb-10">Fecha de elección</label>
+                    <mat-form-field class="w-full">
+                        <i-feather name="calendar"></i-feather>
                         <mat-label>Fecha de elección</mat-label>
-                        <input matInput formControlName="fecha_eleccion" [matDatepicker]="picker1">
+                        <input matInput formControlName="fecha_eleccion" [matDatepicker]="picker1" />
                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                         <mat-datepicker #picker1></mat-datepicker>
                     </mat-form-field>
                 </div>
 
-                <div class="col-lg-6">
-                    <mat-form-field class="w-full" appearance="outline">
+                <!-- Fecha de culminación -->
+                <div class="col-lg-6 mb-3">
+                    <label class="label d-block fw-medium mb-10">Fecha de culminación</label>
+                    <mat-form-field class="w-full">
                         <mat-label>Fecha de culminación</mat-label>
-                        <input matInput formControlName="fecha_culminacion" [matDatepicker]="picker2">
+                        <input matInput formControlName="fecha_culminacion" [matDatepicker]="picker2" />
                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                         <mat-datepicker #picker2></mat-datepicker>
                     </mat-form-field>
                 </div>
 
-                <div class="col-lg-6">
-                    <mat-form-field class="w-full" appearance="outline">
+                <!-- Categoría -->
+                <div class="col-lg-6 mb-3">
+                    <label class="label d-block fw-medium mb-10">Categoría</label>
+                    <mat-form-field class="w-full">
                         <mat-label>Categoría</mat-label>
-                        <input matInput formControlName="categoria"/>
+                        <input matInput formControlName="categoria" />
                     </mat-form-field>
                 </div>
 
-                <div class="col-lg-6">
-                    <mat-form-field class="w-full" appearance="outline">
+                <!-- Régimen -->
+                <div class="col-lg-6 mb-3">
+                    <label class="label d-block fw-medium mb-10">Régimen</label>
+                    <mat-form-field class="w-full">
                         <mat-label>Régimen</mat-label>
-                        <input matInput formControlName="regimen"/>
+                        <input matInput formControlName="regimen" />
                     </mat-form-field>
                 </div>
 
-                <div class="col-lg-6">
-                    <mat-form-field class="w-full" appearance="outline">
+                <!-- Rol -->
+                <div class="col-lg-6 mb-3">
+                    <label class="label d-block fw-medium mb-10">Rol</label>
+                    <mat-form-field class="w-full">
                         <mat-label>Rol</mat-label>
                         <mat-select formControlName="rol" required>
                             <mat-option [value]="9">Auditor</mat-option>
+                            <!-- Agrega más roles según necesidad -->
                         </mat-select>
                     </mat-form-field>
                 </div>
-
-
             </div>
 
-            <div class="text-end mt-4">
-                <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid">
+            <div class="save-user-btn">
+                <button mat-button color="primary" type="submit" [disabled]="registerForm.invalid">
                     Guardar Usuario
                 </button>
-                <button mat-button type="reset">
-                    Cancelar
-                </button>
+                <button mat-button type="reset">Cancelar</button>
             </div>
         </form>
     </mat-card-content>

@@ -8,6 +8,7 @@ import { AverageResponseTimeService } from './average-response-time.service';
     selector: 'app-average-response-time',
     imports: [MatCardModule, MatButtonModule, MatMenuModule],
     templateUrl: './average-response-time.component.html',
+    standalone: true,
     styleUrl: './average-response-time.component.scss'
 })
 export class AverageResponseTimeComponent {

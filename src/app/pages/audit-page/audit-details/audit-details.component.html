@@ -1,0 +1,39 @@
+<div class="row">
+    @if (audit) {
+        <div class="col-xxl-12">
+            <!-- User Bio -->
+
+            <app-user-bio
+                [code]="audit.code"
+                [status]="audit.status.name"
+                [auditor]="audit.auditor"
+                [coordinator]="audit.coordinator"
+                [entityType]="audit.entity_type"
+                [entityId]="audit.entity_id"
+                [date]="audit.date"
+                [standardTitle]="audit.applicable_standard.title"
+                [standardCode]="audit.applicable_standard.code"
+            />
+
+
+        </div>
+        <div class="col-xxl-8">
+
+            <!-- Newsfeed -->
+            <app-newsfeed
+                [auditId]="audit?.id"
+                [questions]="audit.questions"
+                [subitemId]="selectedSubitemId"
+                [subitemName]="selectedSubitemName"
+            />
+
+        </div>
+        <div class="col-xxl-4">
+
+            <!-- Friends -->
+            <app-friends [items]="audit.applicable_standard.items" (subitemSelected)="onSubitemSelected($event)"/>
+
+        </div>
+    }
+
+</div>

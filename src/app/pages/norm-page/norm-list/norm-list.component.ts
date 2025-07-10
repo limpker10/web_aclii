@@ -8,16 +8,19 @@ import {MatSort, MatSortModule} from "@angular/material/sort";
 import {Usuario} from "../../../interfaces/users/usuario.interfaces";
 import {SnackbarService} from "../../../common/custom-snackbar/snackbar.service";
 import {NormService} from "../../../services/norm/norm.service";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MatIcon} from "@angular/material/icon";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-norm-list',
-    imports: [MatCardModule, MatButtonModule, MatMenuModule, MatPaginatorModule, MatTableModule, MatSortModule],
+    imports: [MatCardModule, MatButtonModule, MatMenuModule, MatPaginatorModule, MatTableModule, MatSortModule, MatIcon, MatTooltip],
     templateUrl: './norm-list.component.html',
     standalone: true,
     styleUrl: './norm-list.component.scss'
 })
 export class NormListComponent {
-    displayedColumns: string[] = ['id', 'code', 'organization', 'title', 'version_year', 'category','status'];
+    displayedColumns: string[] = ['id', 'code', 'organization', 'title', 'version_year', 'category','status','action'];
     dataSource = new MatTableDataSource<any>();
 
     resultsLength = 0;
@@ -36,6 +39,7 @@ export class NormListComponent {
 
     readonly normService = inject(NormService)
     readonly snackbarService = inject(SnackbarService)
+    readonly router = inject(Router)
 
 
     ngOnInit(): void {
@@ -82,6 +86,26 @@ export class NormListComponent {
         this.loadNorms(backendPage, this.pageSize);
     }
 
+    edit(element: any): void {
+        this.router.navigate(['/audits/audit-edit', element.id]);
+    }
+
+    delete(element: any): void {
+        if (!element?.id) return;
+        this.normService.deleteNorm(element.id).subscribe({
+            next: (data) => {
+                this.snackbarService.showCustom("Norma eliminada",3000,"success")
+                this.loadNorms();
+            },
+            error: (error) => {
+                this.snackbarService.showCustom("Problemas al momento de eliminar Norma",3000,"error")
+                console.error('Error al cargar usuarios:', error);
+            }
+        });
+    }
+    details(element: any): void {
+        this.router.navigate(['/norms/stepp-norm', element.id]);
+    }
     openDialog(){
 
     }

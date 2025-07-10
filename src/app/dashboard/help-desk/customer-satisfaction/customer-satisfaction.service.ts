@@ -12,15 +12,17 @@ export class CustomerSatisfactionService {
         this.isBrowser = isPlatformBrowser(this.platformId);
     }
 
-    async loadChart(): Promise<void> {
+    async loadChart(data: { status__name: string; total: number }[]): Promise<void> {
         if (this.isBrowser) {
             try {
-                // Dynamically import ApexCharts
                 const ApexCharts = (await import('apexcharts')).default;
 
-                // Define chart options
+                const series = data.map(d => d.total);
+                const labels = data.map(d => d.status__name);
+
                 const options = {
-                    series: [14, 23, 21, 17, 15, 10],
+                    series,
+                    labels,
                     chart: {
                         type: "polarArea",
                         height: 365
@@ -32,11 +34,8 @@ export class CustomerSatisfactionService {
                     fill: {
                         opacity: 1
                     },
-                    labels: [
-                        'Active Ticket', 'Solved Ticket', 'Closed Ticket', 'Open Ticket', 'Critical Ticket', 'High Ticket'
-                    ],
                     colors: [
-                        "#3761EE", "#A9A9C8", "#E4D4F6", "#5B5B98", "#DC9393", "#D2DC93"
+                        "#3761EE", "#A9A9C8", "rgba(158,55,76,0.77)", "#5B5B98", "#DC9393", "#D2DC93"
                     ],
                     grid: {
                         show: true,
@@ -61,13 +60,17 @@ export class CustomerSatisfactionService {
                     }
                 };
 
-                // Initialize and render the chart
-                const chart = new ApexCharts(document.querySelector('#help_desk_customer_satisfaction_chart'), options);
+                const chart = new ApexCharts(
+                    document.querySelector('#help_desk_customer_satisfaction_chart'),
+                    options
+                );
                 chart.render();
+
             } catch (error) {
                 console.error('Error loading ApexCharts:', error);
             }
         }
     }
+
 
 }

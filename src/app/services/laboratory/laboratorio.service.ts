@@ -8,7 +8,7 @@ import {environment} from "../../../environments/environment.development";
     providedIn: 'root'
 })
 export class LaboratorioService {
-    private baseUrl = `${environment.apiUrl}/sileii_services/laboratorio`;
+    private baseUrl = `${environment.apiUrl}/sileii_services/audit/laboratorio`;
     constructor(private http: HttpClient) {}
 
     getLaboratoriosCombo(): Observable<LaboratorioCombo[]> {

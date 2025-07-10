@@ -1,0 +1,111 @@
+<!-- Create Post -->
+<mat-card class="trinta-card publish-post-card mb-25 bg-white border-none d-block">
+    <mat-card-content>
+        <p>{{ subitemName ? subitemName : 'No se ha seleccionado un subítem para agregarle las preguntas' }}</p>
+        <form [formGroup]="questionForm" (ngSubmit)="sendQuestion()">
+
+            <mat-form-field>
+                <i-feather name="edit"></i-feather>
+                <mat-label>Escribe una pregunta..</mat-label>
+                <textarea matInput placeholder="Escribe la pregunta para la norma seleccionada ..."
+                          formControlName="question_text"></textarea>
+            </mat-form-field>
+        </form>
+        <div class="btn-box d-md-flex justify-content-between align-items-center flex-wrap gap-2">
+
+            <div class="buttons-list d-flex align-items-center flex-wrap gap-2">
+
+                <a [href]="'http://127.0.0.1:8000/sileii_services/audit/export/audit/' + auditId + '/questions/'"
+                   class="btn btn-success d-flex align-items-center gap-1"
+                   target="_blank">
+                    <i class="material-symbols-outlined">download</i>
+                    Exportar
+                </a>
+
+                <a href="http://127.0.0.1:8000/sileii_services/audit/export/audit/question-template/"
+                   class="btn btn-outline-primary d-flex align-items-center gap-1"
+                   target="_blank">
+                    <i class="material-symbols-outlined">file_download</i>
+                    Plantilla
+                </a>
+
+                <label class="btn btn-secondary d-flex align-items-center gap-1 cursor-pointer m-0">
+                    <i class="material-symbols-outlined">upload_file</i>
+                    <span>Seleccionar Excel</span>
+                    <input type="file" (change)="onFileSelected($event)" hidden/>
+                </label>
+
+                <button class="btn btn-primary d-flex align-items-center gap-1"
+                        (click)="uploadFile()" [disabled]="!selectedFile">
+                    <i class="material-symbols-outlined">upload</i>
+                    Subir Excel
+                </button>
+
+            </div>
+
+            <button mat-fab extended (click)="sendQuestion()" [disabled]="questionForm.invalid || !subitemId"
+                    [matTooltip]="!subitemId ? 'Selecciona un subítem primero' : ''">
+                <mat-icon>send</mat-icon>
+                Guardar
+            </button>
+
+        </div>
+
+    </mat-card-content>
+</mat-card>
+@if (filteredQuestions.length > 0) {
+    <mat-card class="trinta-card publish-post-card mb-25 bg-white border-none d-block">
+        <table class="table table-bordered table-striped question-table">
+            <thead>
+            <tr>
+                <th class="sticky-header">Pregunta</th>
+                <th class="sticky-header text-center">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+                @for (q of filteredQuestions; track q.id) {
+                    <tr>
+                        <td>{{ q.question_text }}</td>
+                        <td class="text-end">
+                            <button mat-mini-fab color="warn">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-mini-fab color="warn">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </mat-card>
+} @else {
+    <mat-card class="trinta-card publish-post-card mb-25 bg-white border-none d-block">
+    <table class="table table-bordered table-striped question-table">
+        <thead>
+        <tr>
+            <th class="sticky-header text-center" style="width: 5%;">#</th>
+            <th class="sticky-header" style="width: 75%;">Pregunta</th>
+            <th class="sticky-header text-center" style="width: 20%;">Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+            @for (q of questions; track q.id; let idx = $index) {
+                <tr>
+                    <td class="text-center">{{ idx + 1 }}</td>
+                    <td>{{ q.question_text }}</td>
+                    <td class="text-center">
+                        <button mat-mini-fab color="warn">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-mini-fab color="warn">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    </mat-card>
+}
+<!--filteredQuestions-->

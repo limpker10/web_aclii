@@ -7,7 +7,7 @@
         z-index: 222;
         left: 0;
         top: 0;
-        
+
         .logo {
             padding: 25px 25px 25px 20px;
             position: absolute;
@@ -15,7 +15,7 @@
             right: 0;
             left: 0;
             top: 0;
-            
+
             a {
                 span {
                     font-size: 24px;
@@ -33,7 +33,7 @@
             right: 19px;
             visibility: hidden;
             position: absolute;
-    
+
             span {
                 height: 1px;
                 width: 25px;
@@ -42,7 +42,7 @@
             &.active {
                 opacity: 1;
                 visibility: visible;
-                
+
                 span {
                     &.top-bar {
                         transform: rotate(45deg);
@@ -110,7 +110,7 @@
                         margin-bottom: 21px;
                         color: var(--blackColor);
                         background-color: transparent;
-            
+
                         .mat-expansion-panel-header {
                             transition: var(--transition);
                             background-color: transparent;
@@ -142,7 +142,7 @@
                             }
                             .mat-content {
                                 display: block;
-            
+
                                 .mat-expansion-panel-header-title, .mat-expansion-panel-header-description {
                                     display: block;
                                     margin-right: 0;
@@ -173,7 +173,7 @@
                                 margin-top: 0.5px;
                                 right: -4px;
                                 top: 50%;
-            
+
                                 svg {
                                     display: none;
                                 }
@@ -242,7 +242,7 @@
                         }
                         .mat-expansion-panel-body {
                             padding: 16px 0 0;
-            
+
                             .mat-expansion-panel {
                                 margin-bottom: 0;
                             }
@@ -281,7 +281,7 @@
                                 &.mat-expanded, &:hover {
                                     background-color: var(--primaryColor) !important;
                                     color: var(--whiteColor);
-            
+
                                     .mat-content {
                                         .mat-expansion-panel-header-title, .mat-expansion-panel-header-description {
                                             color: var(--whiteColor) !important;
@@ -338,7 +338,7 @@
                                         &:hover, &.active {
                                             background-color: var(--primaryColor);
                                             color: var(--whiteColor);
-            
+
                                             &::after {
                                                 background-color: var(--whiteColor);
                                             }
@@ -390,29 +390,34 @@
                         transition: var(--transition);
                         color: var(--blackColor);
                         letter-spacing: 0.14px;
-                        margin-bottom: 25px;
+                        margin-bottom: 3px;
                         position: relative;
-                        padding-left: 24px;
+                        padding: 10px 16px 10px 36px;
                         display: block;
+                        border-radius: 8px;
                         font: {
                             family: var(--headingFontFamily);
                             size: var(--fontSize);
                             weight: 500;
-                        };
+                        }
+
                         i-feather {
                             transition: var(--transition);
                             transform: translateY(-50%);
                             position: absolute;
-                            margin-top: -.5px;
-                            color: #818093;
-                            line-height: 1;
+                            top: 50%;
+                            left: 12px;
                             height: 16px;
                             width: 16px;
-                            top: 50%;
-                            left: 0;
+                            color: #818093;
+                            line-height: 1;
                         }
-                        &:hover, &.active {
+
+                        &:hover,
+                        &.active {
                             color: var(--primaryColor);
+                            background-color: rgba(55, 97, 238, 0.1); // Fondo suave con el primary color
+                            box-shadow: 0 0 0 1px var(--primaryColor);
 
                             i-feather {
                                 color: var(--primaryColor);
@@ -432,7 +437,7 @@
         .sidebar-area {
             width: 250px;
             left: -100%;
-            
+
             .logo {
                 padding: 20px 20px 20px 15px;
             }
@@ -450,8 +455,8 @@
                 .sidebar-menu {
                     .sub-title {
                         padding-left: 18px;
-                        margin-bottom: 15px;
-    
+                        margin-bottom: 8px;
+
                         &::before {
                             width: 10px;
                         }
@@ -459,7 +464,7 @@
                     .mat-accordion {
                         .mat-expansion-panel {
                             margin-bottom: 22px;
-                
+
                             .mat-expansion-panel-header {
                                 font-size: 13px;
                             }
@@ -534,12 +539,12 @@
 
 /* Min width 1200px */
 @media (min-width: 1200px) {
-    
+
     ::ng-deep {
         .sidebar-area {
             &.active, &.hide-sidebar {
                 width: 60px;
-    
+
                 .logo {
                     padding: {
                         left: 12px;
@@ -569,12 +574,12 @@
                     .mat-accordion {
                         .mat-expansion-panel {
                             margin-bottom: 5px;
-                
+
                             .mat-expansion-panel-header {
                                 padding: 0;
                                 width: 36px;
                                 height: 36px;
-    
+
                                 i-feather {
                                     left: 0;
                                     right: 0;
@@ -603,7 +608,7 @@
                             width: 36px;
                             height: 36px;
                             margin-bottom: 5px;
-    
+
                             i-feather {
                                 left: 0;
                                 right: 0;
@@ -621,7 +626,7 @@
                 }
                 &:hover {
                     width: 260px;
-    
+
                     .logo {
                         padding: {
                             left: 25px;
@@ -651,7 +656,7 @@
                         .mat-accordion {
                             .mat-expansion-panel {
                                 margin-bottom: 25px;
-                    
+
                                 .mat-expansion-panel-header {
                                     width: auto;
                                     height: auto;

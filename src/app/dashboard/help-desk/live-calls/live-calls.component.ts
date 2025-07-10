@@ -8,6 +8,7 @@ import { LiveCallsService } from './live-calls.service';
     selector: 'app-live-calls',
     imports: [MatCardModule, MatButtonModule, MatMenuModule],
     templateUrl: './live-calls.component.html',
+    standalone: true,
     styleUrl: './live-calls.component.scss'
 })
 export class LiveCallsComponent {

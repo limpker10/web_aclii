@@ -36,3 +36,10 @@ export interface Norm {
     files: unknown[];             // idem: tipa si tienes estructura
     items: NormItem[];
 }
+
+export interface NormApiResponse {
+    count: number;
+    next: string | null;
+    previous: string | null;
+    results: Norm[];
+}

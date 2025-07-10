@@ -2,123 +2,55 @@
     <mat-card-header>
         <mat-card-title>
             <h5 class="mt-0 mb-0">
-                Agents List
+                Auditorías Reprogramadas
             </h5>
         </mat-card-title>
-        <mat-card-subtitle>
-            <button type="button" mat-button class="card-header-menu-btn" [matMenuTriggerFor]="cardHeaderMenu">
-                This Week
-            </button>
-            <mat-menu #cardHeaderMenu="matMenu" class="card-header-menu" xPosition="before">
-                <button mat-menu-item>
-                    This Day
-                </button>
-                <button mat-menu-item>
-                    This Week
-                </button>
-                <button mat-menu-item>
-                    This Month
-                </button>
-                <button mat-menu-item>
-                    This Year
-                </button>
-            </mat-menu>
-        </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
+        @if (dataSource.data.length > 0) {
         <div class="agents-list-table">
             <div class="table-responsive">
-                <table mat-table [dataSource]="dataSource">
-
-                    <!-- Agent Column -->
-                    <ng-container matColumnDef="agent">
-                        <th mat-header-cell *matHeaderCellDef class="pl-0">
-                            Agent
-                        </th>
-                        <td mat-cell *matCellDef="let element" class="pl-0">
-                            <div class="agent-info d-flex align-items-center">
-                                <div class="image">
-                                    <img [src]="element.agent.img" alt="agent-image">
-                                </div>
-                                <div class="info">
-                                    <h6 class="mt-0">
-                                        {{element.agent.name}}
-                                    </h6>
-                                    <span class="d-block text-body">
-                                        {{element.agent.number}}
-                                    </span>
-                                </div>
-                            </div>
-                        </td>
+                <mat-table [dataSource]="dataSource">
+                    <ng-container matColumnDef="code">
+                        <mat-header-cell *matHeaderCellDef> Código </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.code }} </mat-cell>
                     </ng-container>
 
-                    <!-- Ratings Column -->
-                    <ng-container matColumnDef="ratings">
-                        <th mat-header-cell *matHeaderCellDef>
-                            Ratings
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            <div class="ratings lh-1">
-                                @for (content of element.ratings; track content) {
-                                    <i class="{{content.star}}"></i>
-                                }
-                            </div>
-                        </td>
+                    <ng-container matColumnDef="date">
+                        <mat-header-cell *matHeaderCellDef> Fecha </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.date | date:'shortDate' }} </mat-cell>
                     </ng-container>
 
-                    <!-- Total Calls Column -->
-                    <ng-container matColumnDef="totalCalls">
-                        <th mat-header-cell *matHeaderCellDef>
-                            Total Calls
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            {{element.totalCalls}}
-                        </td>
+                    <ng-container matColumnDef="auditor">
+                        <mat-header-cell *matHeaderCellDef> Auditor </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.auditor }} </mat-cell>
                     </ng-container>
 
-                    <!-- Call Answered Column -->
-                    <ng-container matColumnDef="callAnswered">
-                        <th mat-header-cell *matHeaderCellDef>
-                            Call Answered
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            {{element.callAnswered}}
-                        </td>
+                    <ng-container matColumnDef="coordinator">
+                        <mat-header-cell *matHeaderCellDef> Coordinador </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.coordinator }} </mat-cell>
                     </ng-container>
 
-                    <!-- Time Spent Column -->
-                    <ng-container matColumnDef="timeSpent">
-                        <th mat-header-cell *matHeaderCellDef>
-                            Time Spent
-                        </th>
-                        <td mat-cell *matCellDef="let element" class="text-primary">
-                            {{element.timeSpent}}
-                        </td>
+                    <ng-container matColumnDef="standard">
+                        <mat-header-cell *matHeaderCellDef> Norma </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.applicable_standard }} </mat-cell>
                     </ng-container>
 
-                    <!-- Action Column -->
-                    <ng-container matColumnDef="action">
-                        <th mat-header-cell *matHeaderCellDef class="text-end pr-0">
-                            Action
-                        </th>
-                        <td mat-cell *matCellDef="let element" class="text-end pr-0">
-                            <div class="action">
-                                <button type="button" mat-button class="p-0 min-w-auto lh-1 h-auto">
-                                    <i class="{{element.action.edit}}"></i>
-                                </button>
-                                <button type="button" mat-button class="p-0 min-w-auto lh-1 h-auto">
-                                    <i class="{{element.action.delete}}"></i>
-                                </button>
-                            </div>
-                        </td>
+                    <ng-container matColumnDef="status">
+                        <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.status }} </mat-cell>
                     </ng-container>
 
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-                </table>
+                    <mat-header-row *matHeaderRowDef="displayedColumns" class="fw-medium text-uppercase"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>
             </div>
-            <mat-paginator [pageSizeOptions]="[5, 10, 15]"></mat-paginator>
         </div>
+        } @else {
+            <div class="p-4 text-center text-muted">
+                <i class="ri-information-line fs-4 d-block mb-2"></i>
+                No hay auditorías reprogramadas registradas.
+            </div>
+        }
     </mat-card-content>
 </mat-card>

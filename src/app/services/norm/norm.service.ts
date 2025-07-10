@@ -39,7 +39,12 @@ export class NormService {
     createNorm(norm: Norm): Observable<Norm> {
         return this.http.post<Norm>(`${this.baseUrl}/norms/`, norm);
     }
-
+    createNormItems(norm: any): Observable<Norm> {
+        return this.http.post<any>(`${this.baseUrl}/norm-items/`, norm);
+    }
+    createNormSubItems(norm: any): Observable<Norm> {
+        return this.http.post<any>(`${this.baseUrl}/norm-subitems/`, norm);
+    }
     updateNorm(id: number, norm: Norm): Observable<Norm> {
         return this.http.put<Norm>(`${this.baseUrl}/norms/${id}/`, norm);
     }

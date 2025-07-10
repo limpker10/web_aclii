@@ -9,7 +9,7 @@ import {environment} from "../../../environments/environment.development";
 })
 export class InstitutoService {
 
-    private baseUrl = `${environment.apiUrl}/sileii_services/instituto`;
+    private baseUrl = `${environment.apiUrl}/sileii_services/audit/instituto`;
     constructor(private http: HttpClient) {}
 
     getInstitutosCombo(): Observable<InstitutoCombo[]> {

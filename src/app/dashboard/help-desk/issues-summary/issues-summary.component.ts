@@ -8,6 +8,7 @@ import { IssuesSummaryService } from './issues-summary.service';
     selector: 'app-issues-summary',
     imports: [MatCardModule, MatButtonModule, MatMenuModule],
     templateUrl: './issues-summary.component.html',
+    standalone: true,
     styleUrl: './issues-summary.component.scss'
 })
 export class IssuesSummaryComponent {

@@ -3,17 +3,16 @@ import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Val
 import {MatButtonModule} from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatStepper, MatStepperModule} from '@angular/material/stepper';
+import {MatStepperModule} from '@angular/material/stepper';
 import {NormService} from "../../../services/norm/norm.service";
 import {MatSelectModule} from "@angular/material/select";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatListModule} from "@angular/material/list";
-import {JsonPipe, NgClass, SlicePipe} from "@angular/common";
+import {NgClass} from "@angular/common";
 import {MatCardModule} from "@angular/material/card";
 import {MatIconModule} from "@angular/material/icon";
 import {ActivatedRoute} from "@angular/router";
-import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {MatSlideToggle} from "@angular/material/slide-toggle";
+import {SnackbarService} from "../../../common/custom-snackbar/snackbar.service";
 
 // norm.model.ts
 export interface Subitem {
@@ -66,7 +65,6 @@ export interface Norm {
         MatListModule,
         MatCardModule,
         MatIconModule,
-        MatSlideToggle,
         NgClass,
 
     ],
@@ -77,6 +75,9 @@ export interface Norm {
 export class NormStepperComponent {
     private fb = inject(FormBuilder);
     private normService = inject(NormService);
+    private router = inject(ActivatedRoute);
+    private snackbarService = inject(SnackbarService);
+
 
     // ------------------ formulario raíz ------------------
     normForm: FormGroup = this.fb.group({
@@ -93,23 +94,25 @@ export class NormStepperComponent {
         items: this.fb.array([]),
     });
 
-    // ------------------ atajos ----------------------------
     get items(): FormArray<FormGroup> {
         return this.normForm.get('items') as FormArray<FormGroup>;
     }
+
     subitemsArray(i: number): FormArray<FormGroup> {
         return this.items.at(i).get('subitems') as FormArray<FormGroup>;
     }
 
-    // ------------------ ciclo de vida ---------------------
     ngOnInit(): void {
-        this.loadNorms();            // ← aquí se dispara la carga
+        const idParam = this.router.snapshot.paramMap.get('id');
+        if (idParam) {
+            const id = Number(idParam); // o parseInt(idParam, 10);
+            this.loadNorms(id);
+        }
     }
 
-    // ✅ Tu función adaptada: hace GET /norms/1 y parchea
-    loadNorms(): void {
+    loadNorms(id: number): void {
         this.normService
-            .getNorm(1)
+            .getNorm(id)
             .subscribe({
                 next: (data: Norm) => {
                     console.log(data);       // debug opcional
@@ -121,7 +124,6 @@ export class NormStepperComponent {
             });
     }
 
-    // ------------------ helpers ---------------------------
     private populateForm(norm: Norm): void {
         // 1. campos simples
         this.normForm.patchValue(norm);
@@ -149,17 +151,77 @@ export class NormStepperComponent {
         });
     }
 
-    // ------------------ acciones UI (crear/eliminar) ------
-    addItem()          { this.items.push(this.buildItem()); }
-    removeItem(i: number)  { this.items.removeAt(i); }
-    addSubitem(i: number)  { this.subitemsArray(i).push(this.buildSubitem()); }
-    removeSubitem(i: number, j: number) { this.subitemsArray(i).removeAt(j); }
+    addItem() {
+        this.items.push(this.buildItem());
+        console.log(this.buildItem())
+    }
+
+    removeItem(i: number) {
+        this.items.removeAt(i);
+    }
+
+    addSubitem(i: number) {
+        this.subitemsArray(i).push(this.buildSubitem());
+        console.log(this.buildSubitem())
+    }
+
+    removeSubitem(i: number, j: number) {
+        this.subitemsArray(i).removeAt(j);
+    }
 
     // ------------------ guardar ---------------------------
     onSubmit(): void {
-        if (this.normForm.invalid) { this.normForm.markAllAsTouched(); return; }
-        const payload = this.normForm.value as Norm;
-        console.log('🚀 listo para enviar:', payload);
-        // this.normService.updateNorm(payload.id!, payload).subscribe(...)
+        const normId = this.normForm.value.id;
+
+        if (!normId) {
+            this.snackbarService.showCustom('ID de norma no encontrado.', 4000, 'error');
+            return;
+        }
+
+        const items = this.items.value;
+
+        for (const item of items) {
+            // ✅ Solo crear ítems nuevos (sin ID)
+            if (!item.id) {
+                const itemPayload = {
+                    name: item.name,
+                    norm: normId
+                };
+
+                this.normService.createNormItems(itemPayload).subscribe({
+                    next: (createdItem) => {
+                        this.snackbarService.showCustom(`Item "${createdItem}" creado`, 3000, 'success');
+
+                        // Crear subitems individualmente
+                        for (const sub of item.subitems) {
+                            if (!sub.id) { // ✅ Solo crear subitems nuevos
+                                const subPayload = {
+                                    name: sub.name,
+                                    interpretation: sub.interpretation,
+                                    item: createdItem.id
+                                };
+
+                                this.normService.createNormSubItems(subPayload).subscribe({
+                                    next: () => {
+                                        this.snackbarService.showCustom(`Subitem "${sub.name}" creado`, 2500, 'success');
+                                    },
+                                    error: (err) => {
+                                        console.error('Error al crear subitem:', err);
+                                        this.snackbarService.showCustom(`Error en subitem "${sub.name}"`, 4000, 'error');
+                                    }
+                                });
+                            }
+                        }
+                    },
+                    error: (err) => {
+                        console.error('Error al crear item:', err);
+                        this.snackbarService.showCustom(`Error al crear item "${item.name}"`, 4000, 'error');
+                    }
+                });
+            }
+        }
     }
+
+
+
 }

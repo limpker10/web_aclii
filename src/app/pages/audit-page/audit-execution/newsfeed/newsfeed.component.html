@@ -1,0 +1,87 @@
+<mat-card class="trinta-card post-card mb-25 bg-white border-none d-block">
+    <mat-card-header>
+        <mat-card-header
+            class="d-flex justify-content-between align-items-center"
+        >
+            <h5>Resumen de Pregunta</h5>
+            <!-- Botón INICIAR -->
+            @if (status.id !== 4 && status.id !== 5) {
+            <button
+                mat-flat-button
+                color="primary"
+                (click)="startAudit()"
+                [disabled]="loading"
+            >
+                Iniciar auditoría
+            </button>
+            }
+
+            <!-- Botón FINALIZAR (solo cuando está en ejecución) -->
+            @if (status.id === 4) {
+            <button
+                mat-flat-button
+                color="accent"
+                class="ms-2"
+                (click)="finishAudit()"
+                [disabled]="!allAnswered || loading"
+            >
+                Finalizar auditoría
+            </button>
+            }
+        </mat-card-header>
+    </mat-card-header>
+    <mat-card-content>
+        <!-- newsfeed.component.html -->
+        <form [formGroup]="questionForm">
+            @if (questionsFA.length === 0) {
+            <p class="text-muted">
+                No hay preguntas registradas para este subítem.
+            </p>
+            } @else {
+            <div formArrayName="questions">
+                @for (group of questionsFA.controls; let i = $index; track
+                group.value.id) {
+
+                <div
+                    [formGroupName]="i"
+                    class="mb-4 p-1 border rounded shadow-sm bg-light"
+                >
+                    <!-- Texto de la pregunta -->
+                    <p class="fw-bold text-dark mb-2">
+                        {{ group.get("question_text")!.value }}
+                    </p>
+
+                    <!-- Opciones de cumplimiento (check-boxes) -->
+                    <div class="d-flex gap-1 mb-3">
+                        @for (opt of complianceOptions; track opt) {
+                        <mat-checkbox
+                            [checked]="group.value.compliance === opt"
+                            (change)="setCompliance(i, opt)"
+                            [disabled]="isReadOnly"
+                        >
+                            {{ opt }}
+                        </mat-checkbox>
+                        }
+                    </div>
+
+                    <!-- Observaciones -->
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Observaciones</mat-label>
+                        <textarea
+                            matInput
+                            rows="2"
+                            formControlName="observations"
+                            (blur)="onObservationsBlur(i)"
+                            [readonly]="isReadOnly"
+
+                            placeholder="Escriba observaciones aquí…"
+                        >
+                        </textarea>
+                    </mat-form-field>
+                </div>
+                }
+            </div>
+            }
+        </form>
+    </mat-card-content>
+</mat-card>

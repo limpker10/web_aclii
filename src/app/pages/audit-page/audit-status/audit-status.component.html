@@ -1,0 +1,10 @@
+<!-- audit-status-form.component.html -->
+<form [formGroup]="statusForm" (ngSubmit)="onSubmit()">
+    <label>Nombre:</label>
+    <input type="text" formControlName="name" />
+
+    <label>Descripción:</label>
+    <textarea formControlName="description"></textarea>
+
+    <button type="submit">Guardar Estado</button>
+</form>

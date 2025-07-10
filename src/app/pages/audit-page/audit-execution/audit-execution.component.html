@@ -1,0 +1,26 @@
+@if(audit){
+<div class="row" >
+    <div class="col-xxl-4">
+        <!-- User Bio -->
+        <app-card-info
+            [code]="audit.code"
+            [status]="audit.status?.name"
+            [auditor]="audit.auditor.nombre"
+            [coordinator]="audit.coordinator.nombre"
+            [entityType]="audit.entity_type"
+            [entityId]="audit.entity_id"
+            [date]="audit.date"
+            [standardTitle]="audit.applicable_standard?.title"
+            [standardCode]="audit.applicable_standard?.code"
+        />
+    </div>
+    <div class="col-xxl-8">
+        <!-- Newsfeed -->
+        <app-newsfeed
+            [status]="audit.status"
+            [auditId]="audit.id"
+            [questions]="audit.questions"
+        />
+    </div>
+</div>
+}

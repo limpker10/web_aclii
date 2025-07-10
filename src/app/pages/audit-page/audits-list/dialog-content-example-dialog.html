@@ -1,0 +1,11 @@
+<mat-dialog-content>
+    <p>
+        Esta acción cambiará el estado de la auditoría a <strong>Reprogramada</strong>.
+        Esto significa que la auditoría no será eliminada, sino aplazada para su ejecución en una fecha posterior.
+        Puedes retomarla más adelante según la planificación correspondiente.
+    </p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button [mat-dialog-close]="true">Aceptar</button>
+</mat-dialog-actions>

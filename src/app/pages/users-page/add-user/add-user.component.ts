@@ -19,7 +19,7 @@ import {MatIconModule} from "@angular/material/icon";
 
 @Component({
     selector: 'app-add-user',
-    imports: [MatCardModule, MatButtonModule, MatMenuModule, FormsModule, MatIconModule, MatFormFieldModule, MatInputModule, FeathericonsModule, NgxEditorModule, MatDatepickerModule, FileUploadModule, MatSelectModule, MatRadioModule, NgIf, ReactiveFormsModule],
+    imports: [MatCardModule, MatButtonModule, MatMenuModule, FormsModule, MatIconModule, MatFormFieldModule, MatInputModule, FeathericonsModule, NgxEditorModule, MatDatepickerModule, FileUploadModule, MatSelectModule, MatRadioModule, ReactiveFormsModule],
     providers: [provideNativeDateAdapter()],
     templateUrl: './add-user.component.html',
     standalone: true,
@@ -57,9 +57,16 @@ export class AddUserComponent {
 
     onSubmit(): void {
         if (this.registerForm.valid) {
-            this.userService.create(this.registerForm.value).subscribe({
-                next: () => {
-                    this.router.navigate(['/authentication']);
+            const formValue = { ...this.registerForm.value };
+
+            // Convertir fechas a string con formato YYYY-MM-DD
+            formValue.fecha_eleccion = this.formatDate(formValue.fecha_eleccion);
+            formValue.fecha_culminacion = this.formatDate(formValue.fecha_culminacion);
+
+            this.userService.createUser(formValue).subscribe({
+                next: (res) => {
+                    console.log('Usuario registrado:', res);
+                    this.router.navigate(['/users']); // o la ruta que desees
                 },
                 error: err => {
                     console.error('Error al registrar:', err);
@@ -67,5 +74,13 @@ export class AddUserComponent {
             });
         }
     }
+
+// Formato correcto de fecha (YYYY-MM-DD)
+    private formatDate(date: any): string | null {
+        if (!date) return null;
+        const d = new Date(date);
+        return d.toISOString().split('T')[0]; // Retorna 'YYYY-MM-DD'
+    }
+
 
 }

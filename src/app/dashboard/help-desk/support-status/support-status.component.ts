@@ -7,6 +7,7 @@ import { MatMenuModule } from '@angular/material/menu';
     selector: 'app-support-status',
     imports: [MatCardModule, MatButtonModule, MatMenuModule],
     templateUrl: './support-status.component.html',
+    standalone: true,
     styleUrl: './support-status.component.scss'
 })
 export class SupportStatusComponent {}
