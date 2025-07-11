@@ -29,11 +29,18 @@ import {AuditExecutionComponent} from "./pages/audit-page/audit-execution/audit-
 import {AuditPageComponent} from "./pages/audit-page/audit-page.component";
 import {AddNormComponent} from "./pages/norm-page/add-norm/add-norm.component";
 import {NormEditComponent} from "./pages/norm-page/norm-edit/norm-edit.component";
+import {ViewNormComponent} from "./pages/norm-page/view-norm/view-norm.component";
 
 export const routes: Routes = [
-    {path: '', component: HelpDeskComponent},
-
-
+    {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
+    },
+    {
+        path: 'dashboard',
+        component: HelpDeskComponent
+    },
     {
         path: 'users',
         component: UsersPageComponent,
@@ -53,7 +60,8 @@ export const routes: Routes = [
             {path: '', component: NormListComponent},
             {path: 'add-norm', component: AddNormComponent},
             {path: 'norm-edit/:id', component: NormEditComponent},
-            {path: 'stepp-norm/:id', component: NormStepperComponent}
+            {path: 'stepp-norm/:id', component: NormStepperComponent},
+            {path: 'view-norm/:id', component: ViewNormComponent}
         ]
     },
     {
@@ -75,7 +83,6 @@ export const routes: Routes = [
         component: AuthenticationComponent,
         children: [
             {path: '', component: SignInComponent},
-            {path: 'sign-up', component: SignUpComponent},
             {path: 'logout', component: LogoutComponent}
         ]
     },

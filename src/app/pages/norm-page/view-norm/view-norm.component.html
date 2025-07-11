@@ -1,0 +1,100 @@
+<mat-card class="about-project-card mb-25 bg-white border-none shadow-sm">
+    <mat-card-content>
+
+        <!-- 🔹 Cabecera de la Norma -->
+        @if (norm; as n) {
+            <section class="norm-header mb-4">
+                <h2 class="text-primary mb-1">{{ n.code }} — {{ n.title }}</h2>
+                @if (n.title_en) {
+                    <p class="text-muted fs-14">{{ n.title_en }}</p>
+                }
+
+                <div class="chips d-flex flex-wrap gap-2 mt-2">
+                    @if (n.category) {
+                        <mat-chip color="primary" selected>{{ n.category }}</mat-chip>
+                    }
+                    @if (n.version_year) {
+                        <mat-chip selected>Versión {{ n.version_year }}</mat-chip>
+                    }
+                    @if (n.edition) {
+                        <mat-chip selected>Ed. {{ n.edition }}</mat-chip>
+                    }
+                    @if (n.mandatory) {
+                        <mat-chip color="warn" selected>
+                            <mat-icon>priority_high</mat-icon>
+                            Obligatoria
+                        </mat-chip>
+                    }
+                </div>
+
+                <p class="text-secondary mt-3 fs-15">{{ n.about }}</p>
+            </section>
+        }
+
+        <mat-divider></mat-divider>
+
+        <!-- 🔹 Metadatos -->
+        @if (norm; as n) {
+            <section class="meta mt-4">
+                <h3 class="text-primary mb-2">Metadatos</h3>
+
+                <div class="metadata-grid">
+                    <div><strong>Páginas:</strong> {{ n.pages }}</div>
+                    <div><strong>Publicación:</strong> {{ n.publication_date | date }}</div>
+                    <div><strong>ICS:</strong> {{ n.ics }}</div>
+                    <div><strong>Aprobado por:</strong> {{ n.approved_by }}</div>
+                    <div><strong>Comité:</strong> {{ n.committee }}</div>
+                    <div><strong>Subcomité:</strong> {{ n.subcommittee }}</div>
+                </div>
+
+                @if (n.notes) {
+                    <div class="mt-5">
+                        <strong>Notas:</strong>
+                        <p class="text-secondary fs-15">{{ n.notes }}</p>
+                    </div>
+                }
+            </section>
+        }
+
+        <mat-divider></mat-divider>
+
+        <!-- 🔹 Ítems y Subítems -->
+        @if (norm?.items?.length) {
+            <section class="mt-4">
+                <h3 class="text-primary mb-2">Ítems y Subítems</h3>
+
+                <mat-accordion multi>
+                    @for (item of norm?.items ?? []; track item.name) {
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    {{ item.name }}
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    {{ item.subitems.length }} subítem(s)
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+
+                            <mat-list class="subitem-list">
+                                @for (sub of item.subitems; track sub.name) {
+                                    <mat-list-item class="subitem">
+                                        <div class="subitem-content">
+                                            <span class="subitem-text">{{ sub.name }}</span>
+
+                                            @if (sub.interpretation && sub.interpretation !== '-') {
+                                                <p class="subitem-interpretation">
+                                                    <strong>Interpretación:</strong> {{ sub.interpretation }}
+                                                </p>
+                                            }
+                                        </div>
+                                    </mat-list-item>
+                                }
+                            </mat-list>
+                        </mat-expansion-panel>
+                    }
+                </mat-accordion>
+            </section>
+        }
+
+    </mat-card-content>
+</mat-card>

@@ -1,0 +1,237 @@
+.trinta-card {
+    &.about-project-card {
+        padding: 1rem;
+
+        .mat-mdc-card-header {
+            .action {
+                .mat-mdc-button {
+                    color: #818093;
+                    margin-right: 12px;
+
+                    i-feather {
+                        width: 18px;
+                        height: 18px;
+                    }
+
+                    &:last-child {
+                        margin-right: 0;
+                    }
+                }
+            }
+        }
+
+        .mat-mdc-card-content {
+            h4 {
+                font-size: 24px;
+                margin-bottom: 17px;
+                font-weight: 600;
+            }
+
+            .chips {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin: 1rem 0;
+
+                mat-chip-row {
+                    font-size: 12px;
+                    text-transform: uppercase;
+                    letter-spacing: 0.8px;
+                }
+            }
+
+            .about {
+                font-size: 0.95rem;
+                color: #444;
+                line-height: 1.6;
+                margin-top: 10px;
+                white-space: pre-line;
+            }
+
+            mat-accordion {
+                margin-top: 1.5rem;
+
+                mat-expansion-panel {
+                    margin-bottom: 12px;
+
+                    mat-expansion-panel-header {
+                        background-color: #f9f9f9;
+                        padding: 0 16px;
+
+                        mat-panel-title {
+                            font-weight: 600;
+                            font-size: 15px;
+                        }
+
+                        mat-panel-description {
+                            font-size: 13px;
+                            color: #6b6b6b;
+                        }
+                    }
+
+                    mat-list {
+                        padding-left: 1.2rem;
+
+                        mat-list-item {
+                            padding: 8px 0;
+
+                            mat-icon {
+                                font-size: 18px;
+                                margin-right: 8px;
+                                color: #4caf50;
+                            }
+
+                            [matListItemTitle] {
+                                font-size: 14px;
+                                font-weight: 500;
+                            }
+
+                            .interpretation {
+                                font-size: 13px;
+                                color: #666;
+                                margin-left: 26px;
+                                padding-top: 4px;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .meta {
+                margin-top: 2rem;
+                padding: 1rem;
+                background-color: #fafafa;
+
+                mat-card-title {
+                    font-size: 18px;
+                    margin-bottom: 0.8rem;
+                    font-weight: 600;
+                }
+
+                .meta-table {
+                    width: 100%;
+                    border-collapse: collapse;
+
+                    th, td {
+                        padding: 6px 12px;
+                        font-size: 13px;
+                    }
+
+                    th {
+                        font-weight: 600;
+                        color: #444;
+                        width: 25%;
+                    }
+
+                    tr:nth-child(even) {
+                        background: #f2f2f2;
+                    }
+                }
+
+                .notes {
+                    margin-top: 1rem;
+                    font-size: 13px;
+                    color: #333;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .trinta-card.about-project-card {
+        .mat-mdc-card-content {
+            h4 {
+                font-size: 18px;
+                margin-bottom: 13px;
+            }
+
+            .chips {
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .about {
+                font-size: 0.88rem;
+            }
+
+            mat-list-item {
+                [matListItemTitle] {
+                    font-size: 13px;
+                }
+
+                .interpretation {
+                    font-size: 12px;
+                }
+            }
+
+            .meta-table {
+                font-size: 12px;
+            }
+        }
+    }
+}
+
+
+/* Min width 576px to Max width 767px */
+@media only screen and (min-width : 576px) and (max-width : 767px) {}
+
+/* Min width 768px to Max width 991px */
+@media only screen and (min-width : 768px) and (max-width : 991px) {}
+
+/* Min width 992px to Max width 1199px */
+@media only screen and (min-width : 992px) and (max-width : 1199px) {}
+
+/* Min width 1200px to Max width 1399px */
+@media only screen and (min-width: 1200px) and (max-width: 1399px) {}
+
+/* Min width 1600px */
+@media only screen and (min-width: 1600px) {}
+
+
+.metadata-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.5rem 1rem;
+    margin-top: 0.5rem;
+}
+
+.text-primary {
+    color: #1976d2;
+}
+
+.text-secondary {
+    color: #555;
+}
+
+.fs-14 {
+    font-size: 14px;
+}
+
+.fs-15 {
+    font-size: 15px;
+}
+.subitem-list {
+    padding-left: 0;
+}
+
+.subitem {
+    align-items: flex-start; // alinea el contenido hacia arriba para subitems largos
+}
+
+.subitem-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.subitem-text {
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.subitem-interpretation {
+    margin-top: 4px;
+    margin-left: 0.5rem;
+    font-size: 14px;
+    color: #555;
+}

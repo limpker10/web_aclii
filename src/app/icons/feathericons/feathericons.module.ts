@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FeatherModule } from 'angular-feather';
 import {
     Book,
+    Eye,
     CornerDownRight,
     Video,
     Hash,
@@ -92,6 +93,7 @@ import {
 
 // Select some icons (use an object, not an array)
 const icons = {
+    Eye,
     Book,
     CornerDownRight,
     Video,

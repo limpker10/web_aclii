@@ -14,6 +14,8 @@ import {MatIconModule} from "@angular/material/icon";
 import {ActivatedRoute} from "@angular/router";
 import {SnackbarService} from "../../../common/custom-snackbar/snackbar.service";
 import {MatTooltip} from "@angular/material/tooltip";
+import {catchError, tap} from "rxjs/operators";
+import {of} from "rxjs";
 
 // norm.model.ts
 export interface Subitem {
@@ -38,16 +40,32 @@ export interface Item {
 export interface Norm {
     id: number | null;
     code: string;
-    organization: string;
     title: string;
-    version_year: number;
-    description: string;
-    about: string;
-    video_link: string;
-    category: string;
+    publication_date: string; // ISO date string: YYYY-MM-DD
+    category: 'LAB' | 'INST'; // choices
+
+    organization?: string | null;
+    title_en?: string | null;
+    version_year?: number | null;
+    edition?: string | null;
+    pages?: number | null;
+    description?: string | null;
+    about?: string | null;
+    video_link?: string | null;
+    ref_peru?: string | null;
+    replaced_by?: string | null;
+    approved_by?: string | null;
+    ics?: string | null;
+    mandatory: boolean;
+    notes?: string | null;
+    committee?: string | null;
+    subcommittee?: string | null;
     status: boolean;
+
     created_at?: string;
     updated_at?: string;
+
+    // Relaciones
     items: Item[];
     files: any[];
 }
@@ -67,7 +85,6 @@ export interface Norm {
         MatCardModule,
         MatIconModule,
         NgClass,
-        MatTooltip,
 
     ],
     templateUrl: './norm-stepper.component.html',
@@ -190,11 +207,7 @@ export class NormStepperComponent {
         const normId = this.normForm.value.id!;   // siempre existe (pantalla de edición)
 
         /* 1 ▸ Actualizar la cabecera (Norm) si cambió algo */
-        if (this.normForm.dirty) {
-            this.normService
-                .updateNorm(normId, this.normForm.value)
-                .subscribe();                         // manejar snackbar si quieres
-        }
+
 
         /* 2 ▸ Recorrer cada Ítem del FormArray */
         this.items.controls.forEach((itemCtrl, idx) => {
@@ -208,8 +221,29 @@ export class NormStepperComponent {
 
             /* 2B · Ítem EXISTENTE */
             if (itemCtrl.dirty) {
-                this.normService
-                    .updateItem(item.id, { name: item.name })   // PATCH
+                const itemPayload = {
+                    name: item.name,
+                    norm: this.normForm.value.id           // ⚠️ Incluye la FK
+                };
+
+                this.normService.updateItem(item.id, itemPayload)          // PATCH
+                    .pipe(
+                        tap(() =>
+                            this.snackbarService.showCustom(
+                                `Ítem "${item.name}" actualizado`,
+                                3000,
+                                'success'
+                            )
+                        ),
+                        catchError(err => {
+                            this.snackbarService.showCustom(
+                                `Error al actualizar ítem: ${err.error?.detail ?? 'desconocido'}`,
+                                4000,
+                                'error'
+                            );
+                            return of(null); // evita que el flujo se corte
+                        })
+                    )
                     .subscribe();
             }
 
@@ -218,13 +252,50 @@ export class NormStepperComponent {
             this.subitemsArray(idx).controls.forEach(subCtrl => {
                 const sub = subCtrl.value as Subitem;
 
-                if (!sub.id) {                                 // Sub-ítem NUEVO
-                    this.normService
-                        .createItem({ ...sub, item: itemId })
+                // Sub-ítem NUEVO
+                if (!sub.id) {
+                    this.normService.createSubItem({ ...sub, item: itemId })
+                        .pipe(
+                            tap(created =>
+                                this.snackbarService.showCustom(
+                                    `Sub-ítem "${created.name}" creado`,
+                                    2500,
+                                    'success'
+                                )
+                            ),
+                            catchError(err => {
+                                this.snackbarService.showCustom(
+                                    `Error al crear sub-ítem: ${err.error?.detail ?? 'desconocido'}`,
+                                    4000,
+                                    'error'
+                                );
+                                return of(null);
+                            })
+                        )
                         .subscribe();
-                } else if (subCtrl.dirty) {                    // Sub-ítem EDITADO
-                    this.normService
-                        .createItem(sub.id, sub)
+
+                    // Sub-ítem EDITADO
+                } else if (subCtrl.dirty) {
+                    const subPayload = { ...sub, item: itemId };
+
+                    this.normService.updateSubItem(sub.id, subPayload)
+                        .pipe(
+                            tap(() =>
+                                this.snackbarService.showCustom(
+                                    `Sub-ítem "${sub.name}" actualizado`,
+                                    2500,
+                                    'success'
+                                )
+                            ),
+                            catchError(err => {
+                                this.snackbarService.showCustom(
+                                    `Error al actualizar sub-ítem: ${err.error?.detail ?? 'desconocido'}`,
+                                    4000,
+                                    'error'
+                                );
+                                return of(null);
+                            })
+                        )
                         .subscribe();
                 }
             });
@@ -233,8 +304,9 @@ export class NormStepperComponent {
 
     /* ---------- Helper para crear ítem + sus sub-ítems ---------- */
     private createItemWithSubs(normId: number, item: Item, idx: number): void {
+        console.log("estoy creando")
         this.normService
-            .createNormItems({ name: item.name, norm: normId })
+            .createItem({ name: item.name, norm: normId })
             .subscribe(createdItem => {
 
                 /* Guarda el id que devolvió el backend para futuras ediciones */

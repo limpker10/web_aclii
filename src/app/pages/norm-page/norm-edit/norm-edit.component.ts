@@ -21,7 +21,6 @@ import {MatIconModule} from "@angular/material/icon";
     styleUrls: ['./norm-edit.component.scss'],
     standalone: true,
     imports: [
-        AsyncPipe, NgFor, DatePipe,
         MatFormFieldModule, MatInputModule, MatSelectModule,
         MatCheckboxModule, MatSlideToggleModule, MatButtonModule, FeathericonsModule, ReactiveFormsModule, MatCard, MatCardContent, MatCardHeader, MatCardTitle, MatIconModule,
 

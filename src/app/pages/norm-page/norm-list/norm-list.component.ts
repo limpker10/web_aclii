@@ -106,6 +106,9 @@ export class NormListComponent {
     details(element: any): void {
         this.router.navigate(['/norms/stepp-norm', element.id]);
     }
+    view(element: any): void {
+        this.router.navigate(['/norms/view-norm', element.id]);
+    }
     openDialog(){
 
     }
