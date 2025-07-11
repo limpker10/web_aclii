@@ -1,173 +1,86 @@
-<mat-card class="trinta-card edit-norm-card">
-<form
-    [formGroup]="normForm"
-    (ngSubmit)="onSubmit()"
-    class="d-block w-100"
->
-        <h2 class="h4 fw-bold mb-20 text-primary d-flex align-items-center gap-2">
-            <mat-icon class="text-primary">assignment</mat-icon>
-            Datos generales de la norma
-        </h2>
+<mat-card class="max-w-5xl mx-auto p-6">
+    <h2 class="text-xl font-bold mb-6">Gestión de ítems – Norma {{ normId() }}</h2>
 
-        <div class="row gap-20">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-8">
+        <!-- ITEMS -->
+        <ng-container formArrayName="items">
+            <mat-accordion multi>
+                @for (item of items.controls; let i = $index; track item) {
 
-            <mat-form-field appearance="outline" class="col-12 col-md-6">
-                <mat-label>Código</mat-label>
-                <input matInput formControlName="code"/>
-                @if (normForm.get('code')?.invalid) {
-                    <mat-error>
-                        Código requerido
-                    </mat-error>
-                }
-            </mat-form-field>
 
-            <mat-form-field appearance="outline" class="col-12 col-md-6">
-                <mat-label>Título</mat-label>
-                <input matInput formControlName="title"/>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="col-12 col-md-6">
-                <mat-label>Organización</mat-label>
-                <input matInput formControlName="organization"/>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="col-12 col-md-6">
-                <mat-label>Año versión</mat-label>
-                <input matInput type="number" formControlName="version_year"/>
-            </mat-form-field>
-
-        </div>
-
-        <div
-            class="d-flex justify-content-between align-items-center mb-15 position-sticky top-0 bg-gray pt-10 pb-10 z-1"
-        >
-            <h2 class="h5 fw-semibold m-0 d-flex align-items-center gap-2">
-                <mat-icon>list</mat-icon>
-                Ítems
-            </h2>
-
-            <button
-                mat-raised-button
-                color="primary"
-                type="button"
-                (click)="addItem()"
-                class="d-inline-flex align-items-center gap-1"
-            >
-                <mat-icon>add</mat-icon>
-                Item
-            </button>
-        </div>
-
-        <!-- ▸ FormArray items ----------------------------------------- -->
-        <div formArrayName="items">
-
-            <mat-accordion multi class="d-block space-y-15">
-
-                @for (itemCtrl of items.controls; let i = $index; track i) {
-
-                    <mat-expansion-panel
-                        [formGroupName]="i"
-                        class="border border-radius transition"
-                        [ngClass]="{'box-shadow': itemCtrl.dirty}"
-                    >
-
-                        <!-- HEADER DEL ITEM -->
-                        <mat-expansion-panel-header
-                            class="d-flex align-items-center justify-content-between"
-                        >
-                            <mat-panel-title> Item : {{ itemCtrl.get('id')?.value ?? '(nuevo)' }} </mat-panel-title>
-                            <mat-panel-description> Nombre :  {{ itemCtrl.get('name')?.value ?? '(nuevo)' }} </mat-panel-description>
-                        </mat-expansion-panel-header>
-
-                        <!-- CONTENIDO DEL ITEM -->
-                        <div class="row gap-15 p-15">
-
-                            <mat-form-field appearance="outline" class="col-12">
-                                <mat-label>Nombre del item</mat-label>
-                                <input matInput formControlName="name"/>
-
-                            </mat-form-field>
-                            <button
-                                mat-icon-button
-                                color="warn"
-                                (click)="removeItem(i)"
-                            >
-                                <mat-icon>delete</mat-icon>
-                            </button>
-                            <!-- ▼▼▼ SUBITEMS ▼▼▼ -->
-                            <div formArrayName="subitems" class="col-12">
-
-                                <div
-                                    class="d-flex justify-content-between align-items-center mb-10"
-                                >
-                                    <h3 class="h6 m-0 fw-semibold">Subitems</h3>
-
-                                    <button
-                                        mat-stroked-button
-                                        color="primary"
-                                        type="button"
-                                        (click)="addSubitem(i)"
-                                        class="d-inline-flex align-items-center gap-1"
-                                    >
-                                        <mat-icon>add</mat-icon>
-                                        Subitem
+                    <ng-container>
+                        <mat-expansion-panel [expanded]="i === 0">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Item {{ i + 1 }} – {{ item.get('name')?.value || 'Nuevo' }}
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    <button mat-icon-button type="button" color="warn" (click)="removeItem(i)">
+                                        <i-feather name="trash-2"></i-feather>
                                     </button>
-                                </div>
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
 
-                                @for (subCtrl of subitemsArray(i).controls;
-                                    let j = $index;
-                                    track j) {
+                            <!-- Item name -->
+                            <div [formGroupName]="i" class="space-y-4 py-4 px-1">
+                                <mat-form-field appearance="outline" class="w-full">
+                                    <i-feather matPrefix name="tag" class="mr-2"></i-feather>
+                                    <mat-label>Nombre del Item</mat-label>
+                                    <input matInput formControlName="name" required placeholder="Nombre del item"/>
+                                </mat-form-field>
 
-                                    <mat-card
-                                        [formGroupName]="j"
-                                        class="p-15 mb-10 border border-radius bg-white transition"
-                                        [ngClass]="{'box-shadow': subCtrl.dirty}"
-                                    >
-                                        <div class="row gap-10">
+                                <!-- SUB‑ITEMS -->
+                                <h3 class="text-base font-semibold mt-4">Subítems</h3>
 
-                                            <mat-form-field appearance="outline" class="col-12 col-md-6">
-                                                <mat-label>Nombre subitem</mat-label>
-                                                <input matInput formControlName="name"/>
+                                <ng-container formArrayName="subitems">
+                                    @for (sub of getSubItems(i).controls; track sub; let j = $index) {
+
+                                        <div [formGroupName]="j" class="grid md:grid-cols-2 gap-4">
+                                            <mat-form-field appearance="outline" class="w-full">
+                                                <i-feather matPrefix name="tag" class="mr-2"></i-feather>
+                                                <mat-label>Nombre del Subítem</mat-label>
+                                                <input matInput formControlName="name" required
+                                                       placeholder="Nombre del subítem"/>
                                             </mat-form-field>
 
-                                            <mat-form-field appearance="outline" class="col-12 col-md-6">
+                                            <mat-form-field appearance="outline" class="w-full">
+                                                <i-feather matPrefix name="book-open" class="mr-2"></i-feather>
                                                 <mat-label>Interpretación</mat-label>
-                                                <textarea
-                                                    matInput
-                                                    rows="2"
-                                                    formControlName="interpretation"
-                                                ></textarea>
+                                                <textarea matInput formControlName="interpretation" rows="3" required
+                                                          placeholder="Interpretación"></textarea>
                                             </mat-form-field>
 
-                                            <div class="col-12 d-flex justify-content-end">
-                                                <button
-                                                    mat-icon-button
-                                                    color="warn"
-                                                    (click)="removeSubitem(i, j)"
-                                                    matTooltip="Eliminar subitem"
-                                                >
-                                                    <mat-icon>close</mat-icon>
+                                            <div class="flex items-center col-span-full mb-2">
+                                                <button mat-icon-button type="button" color="warn"
+                                                        (click)="removeSubItem(i, j)">
+                                                    <i-feather name="trash-2"></i-feather>
                                                 </button>
                                             </div>
                                         </div>
-                                    </mat-card>
-                                }
+                                    }
+                                </ng-container>
+
+                                <button mat-stroked-button type="button" color="primary" (click)="addSubItem(i)">
+                                    <i-feather name="plus" class="mr-2"></i-feather>
+                                    Añadir subítem
+                                </button>
                             </div>
-                        </div>
-                    </mat-expansion-panel>
+                        </mat-expansion-panel>
+                    </ng-container>
                 }
             </mat-accordion>
+        </ng-container>
+
+        <!-- ACTIONS -->
+        <div class="flex flex-col gap-4">
+            <button mat-stroked-button type="button" color="primary" (click)="addItem()">
+                <i-feather name="plus" class="mr-2"></i-feather>
+                Añadir item
+            </button>
+
+            <button mat-raised-button color="primary" class="self-end" [disabled]="form.invalid">
+                Guardar cambios
+            </button>
         </div>
-    <div class="text-end mt-20">
-        <button
-            mat-raised-button
-            color="accent"
-            [disabled]="normForm.invalid"
-            class="d-inline-flex align-items-center gap-1"
-        >
-            <mat-icon>save</mat-icon>
-            Guardar
-        </button>
-    </div>
-</form>
+    </form>
 </mat-card>

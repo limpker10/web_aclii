@@ -13,6 +13,7 @@ import {MatCardModule} from "@angular/material/card";
 import {MatIconModule} from "@angular/material/icon";
 import {ActivatedRoute} from "@angular/router";
 import {SnackbarService} from "../../../common/custom-snackbar/snackbar.service";
+import {MatTooltip} from "@angular/material/tooltip";
 
 // norm.model.ts
 export interface Subitem {
@@ -66,6 +67,7 @@ export interface Norm {
         MatCardModule,
         MatIconModule,
         NgClass,
+        MatTooltip,
 
     ],
     templateUrl: './norm-stepper.component.html',
@@ -112,7 +114,7 @@ export class NormStepperComponent {
 
     loadNorms(id: number): void {
         this.normService
-            .getNorm(id)
+            .getNormById(id)
             .subscribe({
                 next: (data: Norm) => {
                     console.log(data);       // debug opcional
@@ -147,7 +149,7 @@ export class NormStepperComponent {
         return this.fb.group({
             id: [sub?.id ?? null],
             name: [sub?.name ?? '', Validators.required],
-            interpretation: [sub?.interpretation ?? ''],
+            interpretation: [sub?.interpretation ?? '', Validators.required],
         });
     }
 
@@ -156,8 +158,20 @@ export class NormStepperComponent {
         console.log(this.buildItem())
     }
 
-    removeItem(i: number) {
-        this.items.removeAt(i);
+    removeItem(index: number): void {
+        const item = this.items.at(index).value;
+
+        // Si el ítem jamás se guardó (no tiene `id`), bórralo localmente.
+        if (!item.id) {
+            this.items.removeAt(index);
+            return;
+        }
+
+        // Ítem existente → DELETE al backend
+        this.normService.deleteItem(item.id).subscribe({
+            next: () => this.items.removeAt(index),
+            error: () => {}
+        });
     }
 
     addSubitem(i: number) {
@@ -171,56 +185,70 @@ export class NormStepperComponent {
 
     // ------------------ guardar ---------------------------
     onSubmit(): void {
-        const normId = this.normForm.value.id;
+        if (this.normForm.invalid) { return; }
 
-        if (!normId) {
-            this.snackbarService.showCustom('ID de norma no encontrado.', 4000, 'error');
-            return;
+        const normId = this.normForm.value.id!;   // siempre existe (pantalla de edición)
+
+        /* 1 ▸ Actualizar la cabecera (Norm) si cambió algo */
+        if (this.normForm.dirty) {
+            this.normService
+                .updateNorm(normId, this.normForm.value)
+                .subscribe();                         // manejar snackbar si quieres
         }
 
-        const items = this.items.value;
+        /* 2 ▸ Recorrer cada Ítem del FormArray */
+        this.items.controls.forEach((itemCtrl, idx) => {
+            const item = itemCtrl.value as Item;
 
-        for (const item of items) {
-            // ✅ Solo crear ítems nuevos (sin ID)
+            /* 2A · Ítem NUEVO → POST */
             if (!item.id) {
-                const itemPayload = {
-                    name: item.name,
-                    norm: normId
-                };
-
-                this.normService.createNormItems(itemPayload).subscribe({
-                    next: (createdItem) => {
-                        this.snackbarService.showCustom(`Item "${createdItem}" creado`, 3000, 'success');
-
-                        // Crear subitems individualmente
-                        for (const sub of item.subitems) {
-                            if (!sub.id) { // ✅ Solo crear subitems nuevos
-                                const subPayload = {
-                                    name: sub.name,
-                                    interpretation: sub.interpretation,
-                                    item: createdItem.id
-                                };
-
-                                this.normService.createNormSubItems(subPayload).subscribe({
-                                    next: () => {
-                                        this.snackbarService.showCustom(`Subitem "${sub.name}" creado`, 2500, 'success');
-                                    },
-                                    error: (err) => {
-                                        console.error('Error al crear subitem:', err);
-                                        this.snackbarService.showCustom(`Error en subitem "${sub.name}"`, 4000, 'error');
-                                    }
-                                });
-                            }
-                        }
-                    },
-                    error: (err) => {
-                        console.error('Error al crear item:', err);
-                        this.snackbarService.showCustom(`Error al crear item "${item.name}"`, 4000, 'error');
-                    }
-                });
+                this.createItemWithSubs(normId, item, idx);
+                return;                               // nada más que hacer con ese ítem
             }
-        }
+
+            /* 2B · Ítem EXISTENTE */
+            if (itemCtrl.dirty) {
+                this.normService
+                    .updateItem(item.id, { name: item.name })   // PATCH
+                    .subscribe();
+            }
+
+            /* 2B-sub · Sub-ítems de un ítem existente */
+            const itemId = item.id;
+            this.subitemsArray(idx).controls.forEach(subCtrl => {
+                const sub = subCtrl.value as Subitem;
+
+                if (!sub.id) {                                 // Sub-ítem NUEVO
+                    this.normService
+                        .createItem({ ...sub, item: itemId })
+                        .subscribe();
+                } else if (subCtrl.dirty) {                    // Sub-ítem EDITADO
+                    this.normService
+                        .createItem(sub.id, sub)
+                        .subscribe();
+                }
+            });
+        });
     }
+
+    /* ---------- Helper para crear ítem + sus sub-ítems ---------- */
+    private createItemWithSubs(normId: number, item: Item, idx: number): void {
+        this.normService
+            .createNormItems({ name: item.name, norm: normId })
+            .subscribe(createdItem => {
+
+                /* Guarda el id que devolvió el backend para futuras ediciones */
+                this.items.at(idx).get('id')!.setValue(createdItem.id);
+
+                /* Crea cada sub-ítem nuevo asociado al ítem recién creado */
+                item.subitems.forEach(sub =>
+                    this.normService
+                        .createSubItem({ ...sub, item: createdItem.id! })
+                        .subscribe()
+                );
+            });
+    }
+
 
 
 

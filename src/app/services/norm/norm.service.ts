@@ -32,7 +32,7 @@ export class NormService {
         return this.http.get<Norm[]>(`${this.baseUrl}/norms/category/`, { params });
     }
 
-    getNorm(id: number): Observable<any> {
+    getNormById(id: number): Observable<any> {
         return this.http.get<any>(`${this.baseUrl}/norms/${id}/`);
     }
 

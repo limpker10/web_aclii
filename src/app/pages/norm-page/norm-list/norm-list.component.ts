@@ -20,7 +20,7 @@ import {Router} from "@angular/router";
     styleUrl: './norm-list.component.scss'
 })
 export class NormListComponent {
-    displayedColumns: string[] = ['id', 'code', 'organization', 'title', 'version_year', 'category','status','action'];
+    displayedColumns: string[] = ['id', 'code', 'title', 'version_year', 'category','status','action'];
     dataSource = new MatTableDataSource<any>();
 
     resultsLength = 0;
@@ -87,7 +87,7 @@ export class NormListComponent {
     }
 
     edit(element: any): void {
-        this.router.navigate(['/audits/audit-edit', element.id]);
+        this.router.navigate(['/norms/norm-edit', element.id]);
     }
 
     delete(element: any): void {

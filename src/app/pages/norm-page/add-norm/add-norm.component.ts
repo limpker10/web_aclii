@@ -1,64 +1,103 @@
 import { Component } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {NormService} from "../../../services/norm/norm.service";
-import {Router} from "@angular/router";
-import {MatInputModule} from "@angular/material/input";
-import {MatButtonModule} from "@angular/material/button";
-import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
-import {MatSelectModule} from "@angular/material/select";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {SnackbarService} from "../../../common/custom-snackbar/snackbar.service";
-
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { NormService } from "../../../services/norm/norm.service";
+import { Router } from "@angular/router";
+import { MatInputModule } from "@angular/material/input";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from "@angular/material/card";
+import { MatSelectModule } from "@angular/material/select";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { SnackbarService } from "../../../common/custom-snackbar/snackbar.service";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { CommonModule } from '@angular/common';
+import { FeathericonsModule } from '../../../icons/feathericons/feathericons.module';
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {provideNativeDateAdapter} from "@angular/material/core";
+import {MatIconModule} from "@angular/material/icon";
 @Component({
     selector: 'app-add-norm',
+    standalone: true,
     imports: [
-        ReactiveFormsModule, MatInputModule, MatButtonModule, MatCard, MatCardContent, MatCardHeader, MatCardTitle,MatSelectModule, MatFormFieldModule
+        CommonModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatButtonModule,
+        MatCard,
+        MatCardContent,
+        MatCardHeader,
+        MatCardTitle,
+        MatSelectModule,
+        MatFormFieldModule,
+        MatCheckboxModule,
+        FeathericonsModule,
+        MatDatepickerModule,
+        MatIconModule
     ],
     templateUrl: './add-norm.component.html',
-    standalone: true,
-    styleUrl: './add-norm.component.scss'
+    styleUrl: './add-norm.component.scss',
+    providers: [provideNativeDateAdapter()],
 })
 export class AddNormComponent {
     categoryOptions = [
-        { value: 'LAB', label: 'Laboratory' },
-        { value: 'INS', label: 'Institute' }
+        { value: 'LAB', label: 'Laboratorio' },
+        { value: 'INST', label: 'Instituto' }
     ];
+
+    /** Se declara pero NO se usa hasta que el constructor la cree */
     normForm!: FormGroup;
 
     constructor(
         private fb: FormBuilder,
         private normService: NormService,
         private router: Router,
-        private snackService: SnackbarService
-    ) {}
+    ) {
+        this.normForm = this.buildForm();   // ← ahora sí existe this.fb
+    }
 
-    ngOnInit(): void {
-        this.normForm = this.fb.group({
+    /** Método helper para dejar limpio el constructor */
+    private buildForm(): FormGroup {
+        return this.fb.group({
             code: ['', Validators.required],
-            organization: ['', Validators.required],
             title: ['', Validators.required],
-            version_year: ['', [Validators.required, Validators.pattern(/^\d{4}$/)]],
+            title_en: [''],
+            organization: [''],
+            version_year: ['', Validators.pattern(/^\d{4}$/)],
+            edition: [''],
+            pages: [
+                '',                                   // ← valor inicial
+                [Validators.required,                 // ← síncronos (array)
+                    Validators.pattern(/^[0-9]+$/)],     //    ⤴ se encadenan aquí
+                []                                    // ← async validators (vacío si no usas)
+            ],
+            publication_date: ['', Validators.required],
+            ref_peru: [''],
+            approved_by: [''],
+            replaced_by: [''],
+            ics: [''],
+            notes: [''],
             description: [''],
             about: [''],
-            video_link: ['', [Validators.pattern('https?://.+')]],
+            video_link: ['', Validators.pattern('https?://.+')],
             category: ['', Validators.required],
+            committee: [''],
+            subcommittee: [''],
+            mandatory: [false],
             status: [true]
         });
     }
 
-    onSubmit(): void {
-        if (this.normForm.valid) {
-            console.log(this.normForm.value)
-            this.normService.createNorm(this.normForm.value).subscribe({
-                next: () => {
-                    this.snackService.showCustom('Se creo nueva norma:',3000,"success")
-                    this.router.navigate(['/norms'])
-                },
-                error: err => {
-                    this.snackService.showCustom('Error al crear norma:',3000,"error")
-                    console.error('Error al crear norma:', err)
-                }
-            });
-        }
+    submit(): void {
+        if (this.normForm.invalid) { return; }
+
+        console.log(this.normForm.value)
+
+        this.normService.createNorm(this.normForm.value).subscribe({
+            next: () => {
+                this.router.navigate(['/norms']);
+            },
+            error: (error) => {
+                console.log(error)
+            }
+        });
     }
 }

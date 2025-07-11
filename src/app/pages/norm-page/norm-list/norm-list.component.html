@@ -2,12 +2,9 @@
     <mat-card-header>
         <mat-card-title>
             <h5 class="mt-0 mb-0">
-                Users List
+                Lista de Normas
             </h5>
         </mat-card-title>
-        <mat-card-subtitle>
-
-        </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
         <div class="norm-list-table">
@@ -19,27 +16,22 @@
                     </ng-container>
 
                     <ng-container matColumnDef="code">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header> Code</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Codigo</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{ element.code }}</mat-cell>
                     </ng-container>
 
-                    <ng-container matColumnDef="organization">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header> organization</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{ element.organization }}</mat-cell>
-                    </ng-container>
-
                     <ng-container matColumnDef="title">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header> title</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Titulo</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{ element.title }}</mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="version_year">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header> version_year</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Año</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{ element.version_year }}</mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="category">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header> category</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Categoria</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{ element.category }}</mat-cell>
                     </ng-container>
 
