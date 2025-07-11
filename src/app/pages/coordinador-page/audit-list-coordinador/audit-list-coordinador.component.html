@@ -1,0 +1,94 @@
+<mat-card class="trinta-card audit-list-card mb-25 bg-white border-none d-block">
+    <mat-card-header>
+        <mat-card-title>
+            <h5 class="mt-0 mb-0">Auditorías</h5>
+        </mat-card-title>
+        <mat-card-subtitle>
+            <!-- Puedes poner filtros o información adicional -->
+        </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+        <div class="audit-list-table">
+            <div class="table-responsive">
+                <mat-table [dataSource]="dataSource" matSort>
+
+                    <ng-container matColumnDef="index">
+                        <mat-header-cell *matHeaderCellDef class="text-center"> # </mat-header-cell>
+                        <mat-cell *matCellDef="let element; let i = index" class="text-center">
+                            {{ i + 1 }}
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- Código -->
+                    <ng-container matColumnDef="code">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Código </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.code }} </mat-cell>
+                    </ng-container>
+
+                    <!-- Tipo de Entidad -->
+                    <ng-container matColumnDef="entity_type">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Tipo Entidad </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.entity_type }} </mat-cell>
+                    </ng-container>
+
+                    <!-- Coordinador -->
+                    <ng-container matColumnDef="coordinator">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Coordinador </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{ element.coordinator?.nombre || '-' }}
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- Auditor -->
+                    <ng-container matColumnDef="auditor">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Auditor </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{ element.auditor?.nombre || '-' }}
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- Norma Aplicable -->
+                    <ng-container matColumnDef="applicable_standard">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Norma </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{ element.applicable_standard?.title || '-' }}
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- Estado -->
+                    <ng-container matColumnDef="status">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Estado </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{ element.status?.name || '-' }}
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- Fecha de creación -->
+                    <ng-container matColumnDef="created_at">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{ element.created_at | date: 'short' }}
+                        </mat-cell>
+                    </ng-container>
+
+
+
+                    <!-- Filas -->
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>
+            </div>
+
+            <mat-paginator
+                (page)="handlePageEvent($event)"
+                [length]="resultsLength"
+                [pageIndex]="pageIndex"
+                [pageSize]="pageSize"
+                [pageSizeOptions]="pageSizeOptions"
+                [showFirstLastButtons]="showFirstLastButtons"
+                aria-label="Select page">
+            </mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>

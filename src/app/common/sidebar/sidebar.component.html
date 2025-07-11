@@ -20,31 +20,6 @@
         <div class="sidebar-inner">
             <div class="sidebar-menu">
                 <mat-accordion>
-<!--                    <span class="sub-title text-body">-->
-<!--                        MAIN-->
-<!--                    </span>-->
-<!--                    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = true">-->
-<!--                        <mat-expansion-panel-header>-->
-<!--                            <mat-panel-title>-->
-<!--                                <i-feather name="home"></i-feather>-->
-<!--                                <span class="title">-->
-<!--                                    Dashboard-->
-<!--                                </span>-->
-<!--                                <span class="trinta-badge">-->
-<!--                                    5-->
-<!--                                </span>-->
-<!--                            </mat-panel-title>-->
-<!--                        </mat-expansion-panel-header>-->
-<!--                        <ul class="sidebar-sub-menu">-->
-
-<!--                            <li class="sidemenu-item">-->
-<!--                                <a routerLink="/" routerLinkActive="active"-->
-<!--                                   [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">-->
-<!--                                    Help Desk <span class="trinta-badge">Hot</span>-->
-<!--                                </a>-->
-<!--                            </li>-->
-<!--                        </ul>-->
-<!--                    </mat-expansion-panel>-->
                     <span class="sub-title text-body">
                         Pagina Principal
                     </span>
@@ -57,75 +32,96 @@
                         </span>
                     </a>
 
+                    @if (role === 1) {
 
-                    <span class="sub-title text-body">
+                        <span class="sub-title text-body">
                         Usuarios
                     </span>
 
-                    <a routerLink="/users" class="sidebar-menu-link" routerLinkActive="active"
-                       [routerLinkActiveOptions]="{exact: true}">
-                        <i-feather name="file-text"></i-feather>
-                        <span class="title">
+                        <a routerLink="/users" class="sidebar-menu-link" routerLinkActive="active"
+                           [routerLinkActiveOptions]="{exact: true}">
+                            <i-feather name="file-text"></i-feather>
+                            <span class="title">
                            Lista Usuarios
                         </span>
-                    </a>
+                        </a>
 
-                    <a routerLink="/users/add-user" class="sidebar-menu-link" routerLinkActive="active"
-                       [routerLinkActiveOptions]="{exact: true}">
-                        <i-feather name="users"></i-feather>
-                        <span class="title">
+                        <a routerLink="/users/add-user" class="sidebar-menu-link" routerLinkActive="active"
+                           [routerLinkActiveOptions]="{exact: true}">
+                            <i-feather name="users"></i-feather>
+                            <span class="title">
                             Agregar Usuario
                         </span>
-                    </a>
+                        </a>
 
-                    <span class="sub-title text-body">
+                        <span class="sub-title text-body">
                         Normas
                     </span>
 
-                    <a routerLink="/norms" class="sidebar-menu-link" routerLinkActive="active"
-                       [routerLinkActiveOptions]="{exact: true}">
-                        <i-feather name="file-text"></i-feather>
-                        <span class="title">
+                        <a routerLink="/norms" class="sidebar-menu-link" routerLinkActive="active"
+                           [routerLinkActiveOptions]="{exact: true}">
+                            <i-feather name="file-text"></i-feather>
+                            <span class="title">
                            Normas
                         </span>
-                    </a>
+                        </a>
 
-                    <a routerLink="/norms/add-norm" class="sidebar-menu-link" routerLinkActive="active"
-                       [routerLinkActiveOptions]="{exact: true}">
-                        <i-feather name="plus-square"></i-feather>
-                        <span class="title">
+                        <a routerLink="/norms/add-norm" class="sidebar-menu-link" routerLinkActive="active"
+                           [routerLinkActiveOptions]="{exact: true}">
+                            <i-feather name="plus-square"></i-feather>
+                            <span class="title">
                             Agregar Norma
                         </span>
-                    </a>
+                        </a>
 
-<!--                    <a routerLink="/norms/stepp-norm" class="sidebar-menu-link" routerLinkActive="active"-->
-<!--                       [routerLinkActiveOptions]="{exact: true}">-->
-<!--                        <i-feather name="plus-square"></i-feather>-->
-<!--                        <span class="title">-->
-<!--                            Agregar Norma-->
-<!--                        </span>-->
-<!--                    </a>-->
+                        <!--                    <a routerLink="/norms/stepp-norm" class="sidebar-menu-link" routerLinkActive="active"-->
+                            <!--                       [routerLinkActiveOptions]="{exact: true}">-->
+                            <!--                        <i-feather name="plus-square"></i-feather>-->
+                            <!--                        <span class="title">-->
+                            <!--                            Agregar Norma-->
+                            <!--                        </span>-->
+                            <!--                    </a>-->
 
-                    <span class="sub-title text-body">
+                        <span class="sub-title text-body">
                         Auditorias
                     </span>
 
-                    <a routerLink="/audits" class="sidebar-menu-link" routerLinkActive="active"
-                       [routerLinkActiveOptions]="{exact: true}">
-                        <i-feather name="file-text"></i-feather>
-                        <span class="title">
+                        <a routerLink="/audits" class="sidebar-menu-link" routerLinkActive="active"
+                           [routerLinkActiveOptions]="{exact: true}">
+                            <i-feather name="file-text"></i-feather>
+                            <span class="title">
                             Lista Auditoria
                         </span>
-                    </a>
+                        </a>
 
-                    <a routerLink="/audits/audit-create" class="sidebar-menu-link" routerLinkActive="active"
-                       [routerLinkActiveOptions]="{exact: true}">
-                        <i-feather name="plus-square"></i-feather>
-                        <span class="title">
+                        <a routerLink="/audits/audit-create" class="sidebar-menu-link" routerLinkActive="active"
+                           [routerLinkActiveOptions]="{exact: true}">
+                            <i-feather name="plus-square"></i-feather>
+                            <span class="title">
                             Agregar Auditoria
                         </span>
-                    </a>
+                        </a>
+                    }
+                    @if (role === 2 || role === 3) {
+                        <span class="sub-title text-body">
+                           Auditoria
+                        </span>
 
+                        <a routerLink="/coordinador" class="sidebar-menu-link" routerLinkActive="active"
+                           [routerLinkActiveOptions]="{exact: true}">
+                            <i-feather name="file-text"></i-feather>
+                            <span class="title">
+                           Lista auditorias
+                        </span>
+                        </a>
+                        <a routerLink="/coordinador/create" class="sidebar-menu-link" routerLinkActive="active"
+                           [routerLinkActiveOptions]="{exact: true}">
+                            <i-feather name="file-text"></i-feather>
+                            <span class="title">
+                           Solicitud auditoria
+                        </span>
+                        </a>
+                    }
 
                 </mat-accordion>
             </div>

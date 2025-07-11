@@ -19,13 +19,16 @@ export class HelpDeskComponent {
     stats: StatCard[] = [];
     donutData: { status__name: string; total: number }[] = [];
     reprogrammedAudits: any[] = [];
-
+    role: number | null = null;
     readonly auditDashboardService = inject(AuditDashboardService)
     readonly snackbarService = inject(SnackbarService)
     readonly router = inject(Router)
 
     ngOnInit(): void {
         this.loadDataDashboard();
+        const raw = localStorage.getItem('user_profile');
+        this.role = raw ? JSON.parse(raw).rol : null;
+        console.log(this.role);
     }
 
     loadDataDashboard(): void {

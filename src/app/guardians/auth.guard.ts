@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {
     CanActivate,
     ActivatedRouteSnapshot,
@@ -6,11 +6,12 @@ import {
     UrlTree,
     Router
 } from '@angular/router';
-import { AuthService } from '../services/auth/auth.service';
+import {AuthService} from '../services/auth/auth.service';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class AuthGuard implements CanActivate {
-    constructor(private router: Router, private authService: AuthService) {}
+    constructor(private router: Router, private authService: AuthService) {
+    }
 
     private rolesMap: { [key: number]: string } = {
         1: 'Administrador',
@@ -24,40 +25,35 @@ export class AuthGuard implements CanActivate {
         9: 'Auditor'
     };
 
-    canActivate(
-        route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot
-    ): boolean | UrlTree {
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree {
+        const rawProfile  = this.authService.getProfileLocalstorage();
+        const isLoggedIn  = !!rawProfile;
 
-        const currentUrl = state.url;
-        const rawProfile = this.authService.getProfileLocalstorage();
-        const isLoggedIn = !!rawProfile;
-
-        if (currentUrl === '/authentication') {
-            if (isLoggedIn) {
-                try {
-                    const user = JSON.parse(rawProfile);
-                    const roleName = this.rolesMap[user.rol] ?? 'Usuario';
-
-                    // Redirección según el rol
-                    if (roleName === 'Usuario' || roleName === 'Secretaria' || roleName === 'Portero') {
-                        return this.router.parseUrl('/coordinator');
-                    }
-
-                    return this.router.parseUrl('/'); // Redirige a inicio si ya está logueado
-                } catch (error) {
-                    console.error('Error parsing user profile:', error);
-                    return this.router.parseUrl('/authentication');
-                }
-            }
-
-            return true; // Permite acceso a login si no está logueado
-        }
-
+        /* ---------- 1. NO autenticado → login ---------- */
         if (!isLoggedIn) {
-            return this.router.parseUrl('/authentication'); // Redirige a login si no está autenticado
+            return this.router.parseUrl('/authentication');
         }
 
-        return true; // Usuario autenticado puede continuar
+        /* ---------- 2. Obtén el rol del usuario ---------- */
+        let roleName = 'Rol desconocido';
+        try {
+            const user   = JSON.parse(rawProfile);
+            roleName     = this.rolesMap[user.rol] ?? 'Rol desconocido';
+        } catch (e) {
+            console.error('Error leyendo user_profile', e);
+            return this.router.parseUrl('/authentication');
+        }
+
+        /* ---------- 3. Verifica roles indicados en la ruta ---------- */
+        const allowedRoles = route.data['roles'] as string[] | undefined;
+
+        if (allowedRoles && !allowedRoles.includes(roleName)) {
+            // No tiene permiso → redirige o bloquea
+            return this.router.parseUrl('/dashboard');   // o '/403' si tienes página 403
+            // también podrías: return false;  // cancela navegación sin redirección
+        }
+
+        /* ---------- 4. Autorizado ---------- */
+        return true;
     }
 }

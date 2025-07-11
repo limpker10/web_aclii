@@ -28,6 +28,14 @@ export class SidebarComponent {
         this.toggleService.toggle();
     }
 
+    role: number | null = null;
+
+    ngOnInit(): void {
+        const raw = localStorage.getItem('user_profile');
+        this.role = raw ? JSON.parse(raw).rol : null;
+        console.log(this.role);
+    }
+
     // Mat Expansion
     panelOpenState = false;
 

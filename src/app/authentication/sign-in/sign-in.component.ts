@@ -56,7 +56,7 @@ export class SignInComponent {
                                 return;
                             }
 
-                            this.router.navigate(['/dashboard']);
+                            this.router.navigate(['/']);
                         },
                         error: (err) => {
                             this.isLoading = false;

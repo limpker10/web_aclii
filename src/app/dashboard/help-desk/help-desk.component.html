@@ -28,20 +28,17 @@
     </div>
 </mat-card>
 
-<app-stats [stats]="stats"/>
+@if (role === 1) {
+    <app-stats [stats]="stats"/>
 
-<div class="row">
-    <div class="col-xxxl-6 col-md-12">
-
-        <app-agents-list [audits]="reprogrammedAudits"/>
-
+    <div class="row">
+        <div class="col-xxxl-6 col-md-12">
+            <app-agents-list [audits]="reprogrammedAudits"/>
+        </div>
+        <div class="col-xxxl-6 col-md-12">
+            <!-- Customer Satisfaction -->
+            <app-customer-satisfaction [data]="donutData"/>
+        </div>
     </div>
-    <div class="col-xxxl-6 col-md-12">
-
-        <!-- Customer Satisfaction -->
-        <app-customer-satisfaction [data]="donutData"/>
-
-    </div>
-
-</div>
+}
 

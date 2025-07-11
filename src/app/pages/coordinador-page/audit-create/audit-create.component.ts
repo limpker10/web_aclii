@@ -171,6 +171,7 @@ export class AuditCreateComponent implements OnInit  {
 
         this.isSubmitting = true;
         const auditData: Audit = this.auditForm.value;
+        console.log(auditData)
 
 
         if (this.auditToEditId) {

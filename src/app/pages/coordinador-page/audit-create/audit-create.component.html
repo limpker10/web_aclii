@@ -1,0 +1,192 @@
+<mat-card class="trinta-card add-project-card mb-25 bg-white border-none d-block">
+
+    <mat-card-content>
+        @if (errorMessage) {
+            <div class="alert alert-danger mt-3">
+                {{ errorMessage }}
+            </div>
+        }
+        @if (auditForm.hasError('sameAuditorError')) {
+
+            <mat-error>
+                El auditor y el auditor interno no pueden ser la misma persona.
+            </mat-error>
+        }
+
+        <form [formGroup]="auditForm" (ngSubmit)="createAudit()">
+            <div class="row align-items-center">
+                <div class="col-lg-8 col-md-6 form-group mb-25">
+                    <h3 class="mt-0 mb-0">
+                        {{ auditToEditId ? 'Actualizar Auditoría' : 'Solicitar Auditoría' }}
+                    </h3>
+                </div>
+                <div class="col-lg-4 col-md-6 form-group mb-25">
+                    <label class="label d-block fw-medium mb-10">
+                        Fecha Ingreso
+                    </label>
+                    <mat-form-field>
+                        <i-feather name="calendar"></i-feather>
+                        <mat-label>Fecha Ingreso</mat-label>
+                        <input matInput formControlName="date"  readonly>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-4 col-md-6 form-group mb-25">
+                    <label class="label d-block fw-medium mb-10">
+                        Laboratorio / Instituto
+                    </label>
+                    <mat-form-field>
+                        <i-feather name="edit"></i-feather>
+                        <mat-label>Laboratorio / Instituto</mat-label>
+                        <mat-select formControlName="entity_type" class="form-control">
+                            @for (type of entityTypes; track type) {
+                                <mat-option [value]="type.value">{{ type.label }}</mat-option>
+                            }
+                        </mat-select>
+                        @if (auditForm.get('entity_type')?.hasError('required')) {
+                            <mat-error>
+                                Este campo es obligatorio.
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+
+                <div class="col-lg-8 col-md-6 form-group mb-25">
+                    <label class="label d-block fw-medium mb-10">
+                        Seleccionar {{ auditForm.get('entity_type')?.value === 'laboratory' ? 'Laboratorio' : 'Instituto' }}
+                    </label>
+
+                    <mat-form-field>
+                        <i-feather name="list"></i-feather>
+                        <mat-label>
+                            Seleccionar {{ auditForm.get('entity_type')?.value === 'laboratory' ? 'Laboratorio' : 'Instituto' }}
+                        </mat-label>
+                        <mat-select formControlName="entity_id" class="form-control">
+                            @for (entity of entityList; track entity) {
+                                <mat-option [value]="entity.id">
+                                    {{ entity.nombre }}
+                                    @if (entity.encargado_nombre) {
+                                        <span> {{ entity.encargado_nombre }}</span>
+                                    }
+                                </mat-option>
+                            }
+                        </mat-select>
+
+                        @if (auditForm.get('entity_id')?.hasError('required')) {
+                            <mat-error>
+                                Este campo es obligatorio.
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+
+                <div class="col-lg-6 col-md-6 form-group mb-25">
+                    <label class="label d-block fw-medium mb-10">
+                        Auditor
+                    </label>
+                    <mat-form-field>
+                        <i-feather name="user"></i-feather>
+                        <mat-label>Auditor</mat-label>
+                        <mat-select formControlName="auditor" class="form-control">
+                            <mat-option [value]="null">-- Sin auditor --</mat-option>
+                            @for (user of auditors; track user) {
+                                <mat-option [value]="user.id">{{ user.nombre }}</mat-option>
+                            }
+                        </mat-select>
+                        @if (auditForm.get('auditor')?.hasError('required')) {
+                            <mat-error>
+                                Este campo es obligatorio.
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+
+                <div class="col-lg-6 col-md-6 form-group mb-25">
+                    <label class="label d-block fw-medium mb-10">
+                        Auditor Interno (opcional)
+                    </label>
+                    <mat-form-field>
+                        <mat-label>Auditor Interno(opcional)</mat-label>
+                        <i-feather name="user"></i-feather>
+                        <mat-select formControlName="internal_auditor" class="form-control">
+                            <mat-option [value]="null">-- Sin auditor interno --</mat-option>
+                            @for (user of auditoresInternal; track user) {
+                                <mat-option [value]="user.id">{{ user.nombre }}</mat-option>
+                            }
+                        </mat-select>
+
+                    </mat-form-field>
+                </div>
+
+                <div class="col-lg-6 col-md-6 form-group mb-25">
+                    <label class="label d-block fw-medium mb-10">
+                        Coordinador
+                    </label>
+                    <mat-form-field>
+                        <mat-label>Coordinador</mat-label>
+                        <i-feather name="user"></i-feather>
+                        <mat-select [(value)]="selectedCoordinadorId" formControlName="coordinator" class="form-control">
+                            @for (coord of coordinadores; track coord) {
+                            <mat-option [value]="coord.id">
+                                {{ coord.nombre }}
+                            </mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+
+                </div>
+
+                <div class="col-lg-6 col-md-6 form-group mb-25">
+                    <label class="label d-block fw-medium mb-10">
+                        Norma Aplicable
+                    </label>
+                    <mat-form-field>
+                        <mat-label>Norma Aplicable</mat-label>
+                        <i-feather name="sliders"></i-feather>
+                        <mat-select formControlName="applicable_standard" class="form-control">
+                            @for (norm of standards; track norm) {
+                                <mat-option [value]="norm.id">{{ norm.code }}</mat-option>
+                            }
+                        </mat-select>
+                        @if (auditForm.get('applicable_standard')?.hasError('required')) {
+                            <mat-error>
+                                Este campo es obligatorio.
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+                <div class="col-12 form-group mb-25">
+                    <label class="label d-block fw-medium mb-10">
+                        Observaciones
+                    </label>
+                    <mat-form-field>
+                        <i-feather name="edit-3"></i-feather>
+                        <mat-label>Observaciones</mat-label>
+                        <textarea matInput formControlName="observations" rows="3" class="form-control"></textarea>
+                    </mat-form-field>
+                </div>
+                <div class="col-12 form-group mb-25">
+                    <label class="label d-block fw-medium mb-10">
+                        Documentos de soporte
+                    </label>
+                    <mat-form-field>
+                        <i-feather name="edit-3"></i-feather>
+                        <mat-label>Documentos de soporte</mat-label>
+                        <textarea matInput formControlName="supporting_documents" rows="3"
+                                  class="form-control"></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="create-project-btn">
+                @if (isSubmitting) {
+                    <div class="loading-overlay">
+                        <mat-spinner diameter="40"></mat-spinner>
+                    </div>
+                }
+                <button mat-button color="primary" type="submit" [disabled]="auditForm.invalid">
+                    {{ auditToEditId ? 'Actualizar Auditoría' : 'Crear Auditoría' }}
+                </button>
+
+            </div>
+        </form>
+    </mat-card-content>
+</mat-card>

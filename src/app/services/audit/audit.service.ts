@@ -39,6 +39,21 @@ export class AuditService {
         return this.http.get<ApiResponse>(this.baseUrl, { params });
     }
 
+    getAuditsByUser(
+        page: number = 1,
+        pageSize: number = 10,
+        userId: number
+    ): Observable<ApiResponse> {
+
+        const params = new HttpParams()
+            .set('page',       page.toString())
+            .set('page_size',  pageSize.toString())
+            .set('user_id',    userId.toString());   // ← aquí va el filtro
+
+        // baseUrl = '/api/audits'  →  endpoint final: /api/audits/by-user/
+        return this.http.get<ApiResponse>(`${this.baseUrl}/by-user/`, { params });
+    }
+
     getAllAudits(url?: string): Observable<any> {
         const endpoint = url ? url : this.baseUrl;
         return this.http.get<any>(endpoint);
